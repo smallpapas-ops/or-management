@@ -860,10 +860,9 @@ function loadDB(){
     DB[115].room_util=DATA_115.room_util;
     DB[115].ontime=DATA_115.ontime; // 強制更新8AM準時率
     DB[115].kpi.ontime_rate=DATA_115.kpi.ontime_rate;
-    if(!DB[115].dept||DB[115].dept.some(d=>!d.monthly||d.monthly.every(v=>v===0))){
-      DB[115].dept=DATA_115.dept;
-      DB[115].monthly_dept=DATA_115.monthly_dept;
-    }
+    // 強制更新 dept（確保口腔外科合併、婦產科扣除DR等正確）
+    DB[115].dept=JSON.parse(JSON.stringify(DATA_115.dept));
+    DB[115].monthly_dept=DATA_115.monthly_dept;
   }
   DB[115].dept_night=DEPT_NIGHT_115;
   // 補齊 cvs
