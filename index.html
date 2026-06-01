@@ -858,7 +858,8 @@ function loadDB(){
   } else {
     // 補齊可能缺少的欄位
     DB[115].room_util=DATA_115.room_util;
-    if(!DB[115].ontime||!DB[115].ontime.overall) DB[115].ontime=DATA_115.ontime;
+    DB[115].ontime=DATA_115.ontime; // 強制更新8AM準時率
+    DB[115].kpi.ontime_rate=DATA_115.kpi.ontime_rate;
     if(!DB[115].dept||DB[115].dept.some(d=>!d.monthly||d.monthly.every(v=>v===0))){
       DB[115].dept=DATA_115.dept;
       DB[115].monthly_dept=DATA_115.monthly_dept;
