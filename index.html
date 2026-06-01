@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+{name:'婦產科',count:195,avg_time:102.5,ot_rate:1.0,ot_count:2,monthly:[43,34,57,61,0,0,0,0,0,0,0,0]}<!DOCTYPE html>
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
@@ -302,6 +302,28 @@ td input:focus{outline:none;border-color:var(--blue-m)}
         <div class="card-header"><span class="card-title">科別件數排行 TOP 8</span></div>
         <div class="chart-wrap" style="height:180px"><canvas id="c-dept-ov" role="img" aria-label="科別排行">科別件數。</canvas></div>
       </div>
+    </div>
+    <div class="card mb16">
+      <div class="card-header">
+        <span class="card-title">每月業務量明細</span>
+        <span style="font-size:11px;color:var(--text3)">門診／住院／急診／全麻／局麻</span>
+      </div>
+      <div class="tbl-wrap"><table id="monthly-detail-table">
+        <thead>
+          <tr>
+            <th>月份</th>
+            <th style="background:#dbeafe;color:#2563eb">門診</th>
+            <th style="background:#d1fae5;color:#059669">住院</th>
+            <th style="background:#fef3c7;color:#d97706">急診</th>
+            <th style="background:#fee2e2;color:#dc2626">緊急</th>
+            <th style="background:#fef2f2;color:#991b1b">危急</th>
+            <th style="background:#ede9fe;color:#7c3aed">全麻</th>
+            <th style="background:#fce7f3;color:#be185d">局麻</th>
+            <th style="background:#f0fdf4;color:#16a34a;font-weight:700">合計</th>
+          </tr>
+        </thead>
+        <tbody id="monthly-detail-tbody"></tbody>
+      </table></div>
     </div>
   </div>
 
@@ -740,11 +762,11 @@ const BASE_114 = {
        ot_rate:3.0,avg_time:86.3,
        emerg:2828,urgent:163,crit:29,
        ontime_rate:86.2,turnover_avg:22.1,dv_count:72,
-       wait_avg:{overall:24.6,white:24.9,evening:25.3,night:11.9}},
+       wait_avg:{overall:16.0,white:17.0,evening:13.0,night:10.0,overall_avg:24.6,white_avg:24.9,evening_avg:25.3,night_avg:11.9}},
   monthly:[1041, 1133, 1336, 1248, 1341, 1263, 1394, 1346, 1246, 1304, 1164, 1358],
   types:{'門診手術':6608,'住院手術':5546,'急診手術':2828,'緊急手術':163,'危急手術':29},
   shift:{'白班':13123,'小夜':1712,'大夜':339},
-  dept:[{name:'泌尿科',count:3087,avg_time:72.7,ot_rate:2.3,ot_count:71,monthly:[203, 236, 249, 268, 262, 231, 308, 299, 283, 304, 228, 216]},{name:'眼科',count:3005,avg_time:26.8,ot_rate:0.2,ot_count:6,monthly:[186, 238, 293, 268, 263, 278, 218, 242, 253, 239, 235, 292]},{name:'骨科',count:2794,avg_time:131.5,ot_rate:7.0,ot_count:196,monthly:[213, 216, 232, 211, 244, 222, 288, 238, 205, 235, 224, 266]},{name:'一般外科',count:1409,avg_time:92.8,ot_rate:2.3,ot_count:32,monthly:[98, 86, 114, 107, 127, 120, 140, 129, 117, 117, 125, 129]},{name:'心臟血管外科',count:1037,avg_time:78.6,ot_rate:2.8,ot_count:29,monthly:[95, 65, 120, 80, 91, 92, 84, 67, 71, 95, 67, 110]},{name:'婦產科',count:893,avg_time:99.5,ot_rate:2.1,ot_count:19,monthly:[53, 62, 70, 73, 69, 75, 86, 75, 76, 78, 76, 100]},{name:'耳鼻喉科',count:814,avg_time:73.1,ot_rate:2.0,ot_count:16,monthly:[53, 74, 76, 72, 88, 63, 80, 88, 58, 56, 51, 55]},{name:'整型外科',count:721,avg_time:56.7,ot_rate:2.6,ot_count:19,monthly:[28, 49, 66, 58, 62, 65, 67, 98, 72, 44, 55, 57]},{name:'直腸外科',count:448,avg_time:114.6,ot_rate:1.6,ot_count:7,monthly:[23, 30, 39, 42, 36, 46, 32, 18, 39, 57, 40, 46]},{name:'乳房外科',count:440,avg_time:86.1,ot_rate:7.5,ot_count:33,monthly:[43, 31, 37, 30, 48, 34, 44, 49, 28, 26, 34, 36]},{name:'神經外科',count:402,avg_time:255.1,ot_rate:4.7,ot_count:19,monthly:[26, 40, 36, 31, 37, 32, 30, 24, 32, 36, 28, 50]},{name:'胸腔外科',count:270,avg_time:158.8,ot_rate:3.7,ot_count:10,monthly:[22, 20, 16, 17, 22, 26, 25, 23, 27, 27, 17, 28]},{name:'口腔外科(含牙醫部)',count:76,avg_time:195.6,ot_rate:0.0,ot_count:0,monthly:[6, 6, 4, 5, 7, 6, 9, 8, 6, 7, 5, 7]},{name:'小兒外科',count:64,avg_time:59.9,ot_rate:0.0,ot_count:0,monthly:[4, 8, 6, 5, 6, 2, 6, 6, 5, 4, 4, 8]},{name:'麻醉科',count:1,avg_time:79.0,ot_rate:0.0,ot_count:0}],
+  dept:[{name:'泌尿科',count:3087,avg_time:72.7,ot_rate:2.3,ot_count:71,monthly:[203, 236, 249, 268, 262, 231, 308, 299, 283, 304, 228, 216]},{name:'眼科',count:3005,avg_time:26.8,ot_rate:0.2,ot_count:6,monthly:[186, 238, 293, 268, 263, 278, 218, 242, 253, 239, 235, 292]},{name:'骨科',count:2794,avg_time:131.5,ot_rate:7.0,ot_count:196,monthly:[213, 216, 232, 211, 244, 222, 288, 238, 205, 235, 224, 266]},{name:'一般外科',count:1409,avg_time:92.8,ot_rate:2.3,ot_count:32,monthly:[98, 86, 114, 107, 127, 120, 140, 129, 117, 117, 125, 129]},{name:'心臟血管外科',count:1037,avg_time:78.6,ot_rate:2.8,ot_count:29,monthly:[95, 65, 120, 80, 91, 92, 84, 67, 71, 95, 67, 110]},{name:'婦產科',count:606,avg_time:117.4,ot_rate:2.0,ot_count:12,monthly:[41,34,48,54,48,46,63,57,50,57,50,58]},{name:'耳鼻喉科',count:814,avg_time:73.1,ot_rate:2.0,ot_count:16,monthly:[53, 74, 76, 72, 88, 63, 80, 88, 58, 56, 51, 55]},{name:'整型外科',count:721,avg_time:56.7,ot_rate:2.6,ot_count:19,monthly:[28, 49, 66, 58, 62, 65, 67, 98, 72, 44, 55, 57]},{name:'直腸外科',count:448,avg_time:114.6,ot_rate:1.6,ot_count:7,monthly:[23, 30, 39, 42, 36, 46, 32, 18, 39, 57, 40, 46]},{name:'乳房外科',count:440,avg_time:86.1,ot_rate:7.5,ot_count:33,monthly:[43, 31, 37, 30, 48, 34, 44, 49, 28, 26, 34, 36]},{name:'神經外科',count:402,avg_time:255.1,ot_rate:4.7,ot_count:19,monthly:[26, 40, 36, 31, 37, 32, 30, 24, 32, 36, 28, 50]},{name:'胸腔外科',count:270,avg_time:158.8,ot_rate:3.7,ot_count:10,monthly:[22, 20, 16, 17, 22, 26, 25, 23, 27, 27, 17, 28]},{name:'口腔外科(含牙醫部)',count:76,avg_time:195.6,ot_rate:0.0,ot_count:0,monthly:[6, 6, 4, 5, 7, 6, 9, 8, 6, 7, 5, 7]},{name:'小兒外科',count:64,avg_time:59.9,ot_rate:0.0,ot_count:0,monthly:[4, 8, 6, 5, 6, 2, 6, 6, 5, 4, 4, 8]},{name:'麻醉科',count:1,avg_time:79.0,ot_rate:0.0,ot_count:0,monthly:[0,0,0,0,0,0,0,0,0,1,0,0]}],
   turnover_dept:[{"name": "眼科", "avg": 13.8, "median": 9.0, "count": 2520, "white": 9.0, "white_avg": 13.8, "white_count": 2520, "evening": null, "evening_count": 0, "night": null, "night_count": 0}, {"name": "心臟血管外科", "avg": 13.1, "median": 9.0, "count": 655, "white": 9.0, "white_avg": 13.1, "white_count": 655, "evening": null, "evening_count": 0, "night": null, "night_count": 0}, {"name": "神經外科", "avg": 14.7, "median": 9.0, "count": 96, "white": 9.0, "white_avg": 14.7, "white_count": 96, "evening": null, "evening_count": 0, "night": null, "night_count": 0}, {"name": "口腔外科", "avg": 10.7, "median": 10.0, "count": 24, "white": 10.0, "white_avg": 10.7, "white_count": 24, "evening": null, "evening_count": 0, "night": null, "night_count": 0}, {"name": "乳房外科", "avg": 15.7, "median": 11.0, "count": 246, "white": 11.0, "white_avg": 15.7, "white_count": 246, "evening": null, "evening_count": 0, "night": null, "night_count": 0}, {"name": "直腸外科", "avg": 15.0, "median": 11.0, "count": 160, "white": 11.0, "white_avg": 15.0, "white_count": 160, "evening": null, "evening_count": 0, "night": null, "night_count": 0}, {"name": "小兒外科", "avg": 11.8, "median": 11.0, "count": 17, "white": 11.0, "white_avg": 11.8, "white_count": 17, "evening": null, "evening_count": 0, "night": null, "night_count": 0}, {"name": "耳鼻喉科", "avg": 18.5, "median": 12.0, "count": 355, "white": 12.0, "white_avg": 18.5, "white_count": 355, "evening": null, "evening_count": 0, "night": null, "night_count": 0}, {"name": "泌尿科", "avg": 20.2, "median": 13.0, "count": 1629, "white": 13.0, "white_avg": 20.2, "white_count": 1629, "evening": null, "evening_count": 0, "night": null, "night_count": 0}, {"name": "一般外科", "avg": 25.2, "median": 14.0, "count": 471, "white": 14.0, "white_avg": 25.2, "white_count": 471, "evening": null, "evening_count": 0, "night": null, "night_count": 0}, {"name": "婦產科", "avg": 18.3, "median": 14.0, "count": 223, "white": 14.0, "white_avg": 18.3, "white_count": 223, "evening": null, "evening_count": 0, "night": null, "night_count": 0}, {"name": "整型外科", "avg": 22.2, "median": 15.0, "count": 248, "white": 15.0, "white_avg": 22.2, "white_count": 248, "evening": null, "evening_count": 0, "night": null, "night_count": 0}, {"name": "骨科", "avg": 28.1, "median": 18.0, "count": 1092, "white": 18.0, "white_avg": 28.1, "white_count": 1092, "evening": null, "evening_count": 0, "night": null, "night_count": 0}, {"name": "胸腔外科", "avg": 23.1, "median": 19.0, "count": 40, "white": 19.0, "white_avg": 23.1, "white_count": 40, "evening": null, "evening_count": 0, "night": null, "night_count": 0}],
   room_turnover:[{"room": "01", "median": 9.0, "avg": 13.5, "count": 2120, "white": 9.0, "white_avg": 13.9, "white_count": 1897, "evening": 9.0, "evening_avg": 9.3, "evening_count": 223, "night": null, "night_avg": null, "night_count": 0}, {"room": "02", "median": 17.0, "avg": 23.7, "count": 631, "white": 15.0, "white_avg": 21.0, "white_count": 546, "evening": 34.0, "evening_avg": 41.5, "evening_count": 83, "night": 29.5, "night_avg": 29.5, "night_count": 2}, {"room": "03", "median": 19.0, "avg": 24.9, "count": 588, "white": 17.0, "white_avg": 22.0, "white_count": 492, "evening": 29.0, "evening_avg": 40.1, "evening_count": 96, "night": null, "night_avg": null, "night_count": 0}, {"room": "05", "median": 14.0, "avg": 20.9, "count": 747, "white": 14.0, "white_avg": 20.5, "white_count": 692, "evening": 22.5, "evening_avg": 26.6, "evening_count": 54, "night": 35.0, "night_avg": 35.0, "night_count": 1}, {"room": "06", "median": 24.0, "avg": 33.0, "count": 1075, "white": 21.0, "white_avg": 28.7, "white_count": 708, "evening": 29.0, "evening_avg": 41.2, "evening_count": 339, "night": 38.5, "night_avg": 42.2, "night_count": 28}, {"room": "07", "median": 15.0, "avg": 24.6, "count": 1183, "white": 14.0, "white_avg": 21.4, "white_count": 1009, "evening": 34.0, "evening_avg": 43.0, "evening_count": 167, "night": 27.0, "night_avg": 38.7, "night_count": 7}, {"room": "08", "median": 17.0, "avg": 22.9, "count": 639, "white": 17.0, "white_avg": 22.9, "white_count": 633, "evening": 23.5, "evening_avg": 23.7, "evening_count": 6, "night": null, "night_avg": null, "night_count": 0}, {"room": "09", "median": 12.0, "avg": 20.0, "count": 1126, "white": 11.0, "white_avg": 18.5, "white_count": 922, "evening": 17.0, "evening_avg": 26.6, "evening_count": 199, "night": 33.0, "night_avg": 32.2, "night_count": 5}, {"room": "11", "median": 19.0, "avg": 25.7, "count": 419, "white": 18.0, "white_avg": 25.4, "white_count": 402, "evening": 24.0, "evening_avg": 32.8, "evening_count": 17, "night": null, "night_avg": null, "night_count": 0}, {"room": "12", "median": 15.0, "avg": 23.3, "count": 1745, "white": 15.0, "white_avg": 22.8, "white_count": 1637, "evening": 15.5, "evening_avg": 29.4, "evening_count": 108, "night": null, "night_avg": null, "night_count": 0}, {"room": "13", "median": 17.0, "avg": 25.4, "count": 375, "white": 17.0, "white_avg": 25.4, "white_count": 374, "evening": 20.0, "evening_avg": 20.0, "evening_count": 1, "night": null, "night_avg": null, "night_count": 0}, {"room": "8A", "median": 20.0, "avg": 18.5, "count": 448, "white": 20.0, "white_avg": 18.5, "white_count": 448, "evening": null, "evening_avg": null, "evening_count": 0, "night": null, "night_avg": null, "night_count": 0}],
   room_util:[{"room": "01", "white": 61.4, "evening": 15.2, "night": 51.9}, {"room": "02", "white": 81.1, "evening": 38.8, "night": 26.2}, {"room": "03", "white": 80.8, "evening": 43.0, "night": 58.8}, {"room": "05", "white": 81.4, "evening": 29.1, "night": 44.2}, {"room": "06", "white": 79.9, "evening": 46.3, "night": 32.7}, {"room": "07", "white": 82.2, "evening": 35.8, "night": 20.4}, {"room": "08", "white": 75.9, "evening": 10.7, "night": 19.3}, {"room": "09", "white": 82.4, "evening": 36.1, "night": 30.7}, {"room": "11", "white": 86.1, "evening": 36.9, "night": 59.3}, {"room": "12", "white": 55.4, "evening": 10.4, "night": 5.8}, {"room": "13", "white": 44.9, "evening": 5.4, "night": 19.8}, {"room": "8A", "white": 17.5, "evening": 0, "night": 0}],
@@ -785,13 +807,13 @@ function saveDB(){
 }
 const DATA_115={
   year:115,label:'115年',
-  kpi:{total:4877,avg_daily:40.6,ot_count:194,ot_rate:4.0,avg_time:87.4,
+  kpi:{total:4878,avg_daily:40.6,ot_count:194,ot_rate:4.0,avg_time:87.4,
        emerg:925,urgent:64,crit:10,ontime_rate:84.6,turnover_avg:20.5,dv_count:12,
-       wait_avg:{overall:27.6,white:28.0,evening:28.1,night:11.4}},
+       wait_avg:{overall:17.0,white:18.0,evening:13.0,night:10.0,overall_avg:27.6,white_avg:28.0,evening_avg:28.1,night_avg:11.4}},
   monthly:[1260,983,1339,1295,0,0,0,0,0,0,0,0],
-  types:{'門診手術':2077,'住院手術':1801,'急診手術':925,'緊急手術':64,'危急手術':10},
+  types:{'門診手術':2077,'住院手術':1801,'急診手術':926,'緊急手術':64,'危急手術':10},
   shift:{'白班':4219,'小夜':530,'大夜':128},
-  dept:[{"name": "眼科", "count": 975, "avg_time": 25.4, "ot_rate": 0.2, "ot_count": 2, "monthly": [264, 164, 299, 248, 0, 0, 0, 0, 0, 0, 0, 0]}, {"name": "骨科", "count": 969, "avg_time": 133.0, "ot_rate": 10.1, "ot_count": 98, "monthly": [248, 217, 251, 253, 0, 0, 0, 0, 0, 0, 0, 0]}, {"name": "泌尿科", "count": 859, "avg_time": 73.8, "ot_rate": 3.0, "ot_count": 26, "monthly": [219, 188, 228, 224, 0, 0, 0, 0, 0, 0, 0, 0]}, {"name": "一般外科", "count": 456, "avg_time": 86.5, "ot_rate": 1.8, "ot_count": 8, "monthly": [115, 94, 119, 128, 0, 0, 0, 0, 0, 0, 0, 0]}, {"name": "心臟血管外科", "count": 355, "avg_time": 76.5, "ot_rate": 5.9, "ot_count": 21, "monthly": [91, 79, 103, 82, 0, 0, 0, 0, 0, 0, 0, 0]}, {"name": "耳鼻喉科", "count": 255, "avg_time": 75.8, "ot_rate": 1.6, "ot_count": 4, "monthly": [64, 47, 64, 80, 0, 0, 0, 0, 0, 0, 0, 0]}, {"name": "整型外科", "count": 221, "avg_time": 61.3, "ot_rate": 2.7, "ot_count": 6, "monthly": [62, 43, 49, 67, 0, 0, 0, 0, 0, 0, 0, 0]}, {"name": "婦產科", "count": 195, "avg_time": 102.5, "ot_rate": 1.0, "ot_count": 2, "monthly": [43, 34, 57, 61, 0, 0, 0, 0, 0, 0, 0, 0]}, {"name": "神經外科", "count": 162, "avg_time": 254.3, "ot_rate": 3.7, "ot_count": 6, "monthly": [51, 36, 41, 34, 0, 0, 0, 0, 0, 0, 0, 0]}, {"name": "直腸外科", "count": 149, "avg_time": 111.3, "ot_rate": 1.3, "ot_count": 2, "monthly": [41, 23, 40, 45, 0, 0, 0, 0, 0, 0, 0, 0]}, {"name": "乳房外科", "count": 140, "avg_time": 78.3, "ot_rate": 8.6, "ot_count": 12, "monthly": [40, 24, 43, 33, 0, 0, 0, 0, 0, 0, 0, 0]}, {"name": "胸腔外科", "count": 97, "avg_time": 163.8, "ot_rate": 7.2, "ot_count": 7, "monthly": [16, 26, 29, 26, 0, 0, 0, 0, 0, 0, 0, 0]}, {"name": "小兒外科", "count": 18, "avg_time": 52.8, "ot_rate": 0.0, "ot_count": 0, "monthly": [2, 5, 7, 4, 0, 0, 0, 0, 0, 0, 0, 0]}, {"name": "口腔外科", "count": 15, "avg_time": 187.9, "ot_rate": 0.0, "ot_count": 0, "monthly": [4, 2, 3, 6, 0, 0, 0, 0, 0, 0, 0, 0]}, {"name": "口腔外科(含牙醫部)", "count": 6, "avg_time": 207.7, "ot_rate": 0.0, "ot_count": 0, "monthly": [0, 1, 3, 2, 0, 0, 0, 0, 0, 0, 0, 0]}, {"name": "麻醉科", "count": 5, "avg_time": 54.2, "ot_rate": 0.0, "ot_count": 0, "monthly": [0, 0, 3, 2, 0, 0, 0, 0, 0, 0, 0, 0]}],
+  dept:[{"name": "眼科", "count": 975, "avg_time": 25.4, "ot_rate": 0.2, "ot_count": 2, "monthly": [264, 164, 299, 248, 0, 0, 0, 0, 0, 0, 0, 0]}, {"name": "骨科", "count": 969, "avg_time": 133.0, "ot_rate": 10.1, "ot_count": 98, "monthly": [248, 217, 251, 253, 0, 0, 0, 0, 0, 0, 0, 0]}, {"name": "泌尿科", "count": 859, "avg_time": 73.8, "ot_rate": 3.0, "ot_count": 26, "monthly": [219, 188, 228, 224, 0, 0, 0, 0, 0, 0, 0, 0]}, {"name": "一般外科", "count": 457, "avg_time": 86.6, "ot_rate": 1.8, "ot_count": 8, "monthly": [116, 94, 119, 128, 0, 0, 0, 0, 0, 0, 0, 0]}, {"name": "心臟血管外科", "count": 355, "avg_time": 76.5, "ot_rate": 5.9, "ot_count": 21, "monthly": [91, 79, 103, 82, 0, 0, 0, 0, 0, 0, 0, 0]}, {"name": "耳鼻喉科", "count": 255, "avg_time": 75.8, "ot_rate": 1.6, "ot_count": 4, "monthly": [64, 47, 64, 80, 0, 0, 0, 0, 0, 0, 0, 0]}, {"name": "整型外科", "count": 221, "avg_time": 61.3, "ot_rate": 2.7, "ot_count": 6, "monthly": [62, 43, 49, 67, 0, 0, 0, 0, 0, 0, 0, 0]}, {"name": "婦產科", "count": 195, "avg_time": 102.5, "ot_rate": 1.0, "ot_count": 2, "monthly": [43, 34, 57, 61, 0, 0, 0, 0, 0, 0, 0, 0]}, {"name": "神經外科", "count": 162, "avg_time": 254.3, "ot_rate": 3.7, "ot_count": 6, "monthly": [51, 36, 41, 34, 0, 0, 0, 0, 0, 0, 0, 0]}, {"name": "直腸外科", "count": 149, "avg_time": 111.3, "ot_rate": 1.3, "ot_count": 2, "monthly": [41, 23, 40, 45, 0, 0, 0, 0, 0, 0, 0, 0]}, {"name": "乳房外科", "count": 140, "avg_time": 78.3, "ot_rate": 8.6, "ot_count": 12, "monthly": [40, 24, 43, 33, 0, 0, 0, 0, 0, 0, 0, 0]}, {"name": "胸腔外科", "count": 97, "avg_time": 163.8, "ot_rate": 7.2, "ot_count": 7, "monthly": [16, 26, 29, 26, 0, 0, 0, 0, 0, 0, 0, 0]}, {"name": "小兒外科", "count": 18, "avg_time": 52.8, "ot_rate": 0.0, "ot_count": 0, "monthly": [2, 5, 7, 4, 0, 0, 0, 0, 0, 0, 0, 0]}, {"name": "口腔外科(含牙醫部)", "count": 21, "avg_time": 193.5, "ot_rate": 0.0, "ot_count": 0, "monthly": [4, 3, 6, 8, 0, 0, 0, 0, 0, 0, 0, 0]}, {"name": "麻醉科", "count": 5, "avg_time": 54.2, "ot_rate": 0.0, "ot_count": 0, "monthly": [0, 0, 3, 2, 0, 0, 0, 0, 0, 0, 0, 0]}],
   monthly_dept:{"一般外科": [115, 94, 119, 128, 0, 0, 0, 0, 0, 0, 0, 0], "乳房外科": [40, 24, 43, 33, 0, 0, 0, 0, 0, 0, 0, 0], "口腔外科": [4, 2, 3, 6, 0, 0, 0, 0, 0, 0, 0, 0], "口腔外科(含牙醫部)": [0, 1, 3, 2, 0, 0, 0, 0, 0, 0, 0, 0], "婦產科": [43, 34, 57, 61, 0, 0, 0, 0, 0, 0, 0, 0], "小兒外科": [2, 5, 7, 4, 0, 0, 0, 0, 0, 0, 0, 0], "心臟血管外科": [91, 79, 103, 82, 0, 0, 0, 0, 0, 0, 0, 0], "整型外科": [62, 43, 49, 67, 0, 0, 0, 0, 0, 0, 0, 0], "泌尿科": [219, 188, 228, 224, 0, 0, 0, 0, 0, 0, 0, 0], "直腸外科": [41, 23, 40, 45, 0, 0, 0, 0, 0, 0, 0, 0], "眼科": [264, 164, 299, 248, 0, 0, 0, 0, 0, 0, 0, 0], "神經外科": [51, 36, 41, 34, 0, 0, 0, 0, 0, 0, 0, 0], "耳鼻喉科": [64, 47, 64, 80, 0, 0, 0, 0, 0, 0, 0, 0], "胸腔外科": [16, 26, 29, 26, 0, 0, 0, 0, 0, 0, 0, 0], "骨科": [248, 217, 251, 253, 0, 0, 0, 0, 0, 0, 0, 0], "麻醉科": [0, 0, 3, 2, 0, 0, 0, 0, 0, 0, 0, 0]},
   dept_night:{"一般外科": [5, 5, 6, 8, 0, 0, 0, 0, 0, 0, 0, 0], "乳房外科": [0, 1, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0], "婦產科": [2, 1, 1, 4, 0, 0, 0, 0, 0, 0, 0, 0], "心臟血管外科": [3, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "整型外科": [3, 4, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0], "泌尿科": [1, 1, 1, 3, 0, 0, 0, 0, 0, 0, 0, 0], "直腸外科": [1, 1, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0], "神經外科": [11, 7, 10, 10, 0, 0, 0, 0, 0, 0, 0, 0], "耳鼻喉科": [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "胸腔外科": [0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0], "骨科": [4, 7, 11, 7, 0, 0, 0, 0, 0, 0, 0, 0]},
   room_util:[{"room": "01", "white": 59.4, "evening": 13.7, "night": 0}, {"room": "02", "white": 81.9, "evening": 41.0, "night": 24.5}, {"room": "03", "white": 75.7, "evening": 38.4, "night": 57.4}, {"room": "05", "white": 78.6, "evening": 21.6, "night": 35.1}, {"room": "06", "white": 79.1, "evening": 49.6, "night": 31.5}, {"room": "07", "white": 76.1, "evening": 33.0, "night": 22.8}, {"room": "08", "white": 75.6, "evening": 18.2, "night": 24.8}, {"room": "09", "white": 81.8, "evening": 41.3, "night": 23.6}, {"room": "11", "white": 80.5, "evening": 19.0, "night": 17.5}, {"room": "12", "white": 55.0, "evening": 10.2, "night": 0}, {"room": "13", "white": 58.9, "evening": 15.9, "night": 0}, {"room": "8A", "white": 13.7, "evening": 0, "night": 0}],
@@ -817,6 +839,20 @@ function loadDB(){
   try{ const s=localStorage.getItem('or_db_v1'); if(s) DB=JSON.parse(s); }catch(e){}
   if(!DB[114]) DB[114]=JSON.parse(JSON.stringify(BASE_114));
   // 115年：localStorage 有完整資料就用，否則從 DATA_115 初始化
+  // 強制修正 kpi 關鍵欄位（確保與常數一致）
+  if(DB[115]&&DB[115].kpi){
+    DB[115].kpi.total=DATA_115.kpi.total;
+    DB[115].kpi.turnover_avg=DATA_115.kpi.turnover_avg;
+    DB[115].kpi.avg_daily=DATA_115.kpi.avg_daily;
+    DB[115].kpi.wait_avg=DATA_115.kpi.wait_avg; // 強制更新（中位數）
+  }
+  if(DB[114]&&DB[114].kpi){
+    const _b=BASE_114;
+    DB[114].kpi.total=_b.kpi.total;
+    DB[114].kpi.turnover_avg=_b.kpi.turnover_avg;
+    DB[114].kpi.avg_daily=_b.kpi.avg_daily;
+    DB[114].kpi.wait_avg=BASE_114.kpi.wait_avg; // 強制更新（中位數）
+  }
   if(!DB[115]||!DB[115].kpi||DB[115].kpi.total===0){
     DB[115]=JSON.parse(JSON.stringify(DATA_115));
   } else {
@@ -998,6 +1034,11 @@ function kpiCard(label,value,sub,color='var(--text)',diff=null){
 // ════════════════════════════════════════════════
 // OVERVIEW
 // ════════════════════════════════════════════════
+
+// 每月各類型平均件數（每天平均）
+const MONTHLY_DETAIL_115={"門診": [560, 391, 586, 540, 0, 0, 0, 0, 0, 0, 0, 0], "住院": [436, 358, 487, 520, 0, 0, 0, 0, 0, 0, 0, 0], "急診": [238, 216, 250, 222, 0, 0, 0, 0, 0, 0, 0, 0], "緊急": [22, 15, 14, 13, 0, 0, 0, 0, 0, 0, 0, 0], "危急": [5, 3, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0], "全麻": [790, 652, 828, 826, 0, 0, 0, 0, 0, 0, 0, 0], "局麻": [471, 331, 511, 469, 0, 0, 0, 0, 0, 0, 0, 0]};
+const MONTHLY_DETAIL_114={"門診": [448, 466, 600, 565, 570, 571, 584, 579, 556, 558, 516, 595], "住院": [363, 430, 478, 460, 515, 467, 538, 495, 434, 462, 417, 487], "急診": [217, 223, 240, 211, 237, 206, 244, 262, 245, 267, 219, 257], "緊急": [11, 13, 15, 11, 16, 18, 24, 8, 8, 15, 9, 15], "危急": [2, 1, 3, 1, 3, 1, 4, 2, 3, 2, 3, 4], "全麻": [681, 715, 823, 771, 851, 771, 920, 848, 782, 832, 739, 856], "局麻": [360, 418, 513, 477, 490, 492, 474, 498, 464, 472, 425, 502]};
+
 function renderOverview(d){
   const k=d.kpi;
   document.getElementById('kpi-overview').innerHTML=[
@@ -1006,8 +1047,37 @@ function renderOverview(d){
     kpiCard('平均手術時間',k.avg_time+' 分','',COLORS.amber),
     kpiCard('逾時率',k.ot_rate+'%',k.ot_count+'件逾時',COLORS.red),
     kpiCard('8AM準時率',k.ontime_rate+'%','首台準時',COLORS.purple),
-    kpiCard('等候平均時間',(k.wait_avg?.overall||k.wait_avg||0)+' 分',`白班${k.wait_avg?.white||0}分／小夜${k.wait_avg?.evening||0}分／大夜${k.wait_avg?.night||0}分`,COLORS.teal),
+    kpiCard('等候時間中位數',(k.wait_avg?.overall||k.wait_avg||0)+' 分',`白${k.wait_avg?.white||0}分／小夜${k.wait_avg?.evening||0}分／大夜${k.wait_avg?.night||0}分（平均${k.wait_avg?.overall_avg||0}分）`,COLORS.teal),
+    // 門診/住院/急診（含緊急危急）每月平均件數
+    (()=>{
+      const activeMons=(d.monthly||[]).filter(v=>v>0).length||1;
+      const t=d.types||{};
+      const ov=t['門診手術']||0;
+      const ip=t['住院手術']||0;
+      const er=(t['急診手術']||0)+(t['緊急手術']||0)+(t['危急手術']||0);
+      const avgOv=Math.round(ov/activeMons*10)/10;
+      const avgIp=Math.round(ip/activeMons*10)/10;
+      const avgEr=Math.round(er/activeMons*10)/10;
+      const erDetail=`急診${t['急診手術']||0}+緊急${t['緊急手術']||0}+危急${t['危急手術']||0}`;
+      return kpiCard('月均門診/住院/急診',
+        `<span style="font-size:13px">${avgOv}<span style="color:var(--text3);font-size:11px">門</span> ${avgIp}<span style="color:var(--text3);font-size:11px">住</span> ${avgEr}<span style="color:var(--text3);font-size:11px">急</span></span>`,
+        `每月平均件數（${erDetail}）`,COLORS.purple);
+    })(),
     kpiCard('達文西手術',k.dv_count,'件',COLORS.green),
+    // 每月麻醉別平均
+    (()=>{
+      const yr2=Number(d.year||currentYear);
+      const md=yr2===115?MONTHLY_DETAIL_115:MONTHLY_DETAIL_114;
+      const activeMons=(d.monthly||[]).filter(v=>v>0).length||1;
+      const totGa=md['全麻'].reduce((a,b)=>a+b,0);
+      const totLa=md['局麻'].reduce((a,b)=>a+b,0);
+      const avgGa=Math.round(totGa/activeMons*10)/10;
+      const avgLa=Math.round(totLa/activeMons*10)/10;
+      const gaRate=totGa+totLa>0?Math.round(totGa/(totGa+totLa)*1000)/10:0;
+      return kpiCard('月均全麻／局麻',
+        `<span style="font-size:13px">${avgGa}<span style="color:var(--text3);font-size:11px">全麻</span> ${avgLa}<span style="color:var(--text3);font-size:11px">局麻</span></span>`,
+        `每月平均件數｜全麻率 ${gaRate}%`,COLORS.amber);
+    })(),
   ].join('');
 
   mkChart('c-monthly-ov','bar',{
@@ -1034,6 +1104,50 @@ function renderOverview(d){
     labels:top8.map(x=>x.name),
     datasets:[{data:top8.map(x=>x.count),backgroundColor:COLORS.blue,borderRadius:3,borderSkipped:false}]
   },{...baseOpts(),indexAxis:'y',scales:{x:{...baseOpts().scales.x,beginAtZero:true},y:{...baseOpts().scales.y,ticks:{color:TC,font:{size:11}}}}});
+
+  // 每月業務量明細表格
+  const mdTbody=document.getElementById('monthly-detail-tbody');
+  if(mdTbody){
+    const yr2=Number(d.year||currentYear);
+    const md=yr2===115?MONTHLY_DETAIL_115:(yr2===114?MONTHLY_DETAIL_114:{});
+    const activeMon=(d.monthly||[]).map((v,i)=>v>0?i:-1).filter(i=>i>=0);
+    if(activeMon.length===0||Object.keys(md).length===0){
+      mdTbody.innerHTML='<tr><td colspan="9" style="text-align:center;color:var(--text3);padding:16px">尚無資料</td></tr>';
+    } else {
+    let totOv=0,totIp=0,totEr=0,totGa=0,totLa=0,totUg=0,totCr=0;
+    const rows=activeMon.map((mi,rowIdx)=>{
+      const ov=md['門診'][mi]||0,ip=md['住院'][mi]||0,er=md['急診'][mi]||0;
+      const ug=md['緊急'][mi]||0,cr=md['危急'][mi]||0;
+      const ga=md['全麻'][mi]||0,la=md['局麻'][mi]||0;
+      const tot=ov+ip+er+ug+cr;
+      totOv+=ov;totIp+=ip;totEr+=er;totGa+=ga;totLa+=la;totUg+=ug;totCr+=cr;
+      const bg=rowIdx%2===1?'background:rgba(0,0,0,0.02)':'';
+      return `<tr style="${bg}">
+        <td style="font-weight:600">${MN[mi]}</td>
+        <td style="text-align:center;color:#2563eb">${ov||'－'}</td>
+        <td style="text-align:center;color:#059669">${ip||'－'}</td>
+        <td style="text-align:center;color:#d97706">${er||'－'}</td>
+        <td style="text-align:center;color:#dc2626">${ug||'－'}</td>
+        <td style="text-align:center;color:#991b1b">${cr||'－'}</td>
+        <td style="text-align:center;color:#7c3aed">${ga||'－'}</td>
+        <td style="text-align:center;color:#be185d">${la||'－'}</td>
+        <td style="text-align:center;font-weight:700;color:#16a34a">${tot||'－'}</td>
+      </tr>`;
+    });
+    rows.push(`<tr style="background:#fef9c3;font-weight:700">
+      <td>合計</td>
+      <td style="text-align:center;color:#2563eb">${totOv.toLocaleString()}</td>
+      <td style="text-align:center;color:#059669">${totIp.toLocaleString()}</td>
+      <td style="text-align:center;color:#d97706">${totEr.toLocaleString()}</td>
+      <td style="text-align:center;color:#dc2626">${totUg.toLocaleString()}</td>
+      <td style="text-align:center;color:#991b1b">${totCr.toLocaleString()}</td>
+      <td style="text-align:center;color:#7c3aed">${totGa.toLocaleString()}</td>
+      <td style="text-align:center;color:#be185d">${totLa.toLocaleString()}</td>
+      <td style="text-align:center;color:#16a34a">${(totOv+totIp+totEr+totUg+totCr).toLocaleString()}</td>
+    </tr>`);
+    mdTbody.innerHTML=rows.join('');
+    }
+  }
 }
 
 // ════════════════════════════════════════════════
@@ -1061,6 +1175,17 @@ function renderDept(d){
   const yr115=d.year||currentYear;
   const deptMonthlyFallback=d.monthly_dept||{};
   const hardcoded=yr115===115?DEPT_MONTHLY_115:{};
+  // 計算合計
+  const deptTotal={count:0,avg_time_sum:0,avg_time_cnt:0,ot_count:0,monthly:Array(12).fill(0)};
+  d.dept.forEach(dep=>{
+    deptTotal.count+=dep.count;
+    if(dep.avg_time>0){deptTotal.avg_time_sum+=dep.avg_time*dep.count;deptTotal.avg_time_cnt+=dep.count;}
+    deptTotal.ot_count+=dep.ot_count;
+    (dep.monthly||[]).forEach((v,i)=>{deptTotal.monthly[i]+=v;});
+  });
+  const deptTotalAvgTime=deptTotal.avg_time_cnt>0?Math.round(deptTotal.avg_time_sum/deptTotal.avg_time_cnt*10)/10:0;
+  const deptTotalOtRate=deptTotal.count>0?Math.round(deptTotal.ot_count/deptTotal.count*1000)/10:0;
+
   tbody.innerHTML=d.dept.map(dep=>{
     const pill=dep.ot_rate>=5?'pill-red':dep.ot_rate>=2?'pill-amber':'pill-green';
     const depMonthly=
@@ -1080,7 +1205,28 @@ function renderDept(d){
       <td><span class="pill ${pill}">${dep.ot_rate}%</span></td>
       <td>${dep.ot_count}</td>
     </tr>`;
-  }).join('');
+  }).join('') + (() => {
+    // 合計列
+    let totCount=0, totOt=0, totTimeSum=0, totTimeCnt=0;
+    const totMon=Array(12).fill(0);
+    d.dept.forEach(dep=>{
+      totCount+=dep.count; totOt+=dep.ot_count;
+      if(dep.avg_time>0){totTimeSum+=dep.avg_time*dep.count;totTimeCnt+=dep.count;}
+      (dep.monthly||[]).forEach((v,i)=>{totMon[i]+=v;});
+    });
+    const totAvgT=totTimeCnt>0?Math.round(totTimeSum/totTimeCnt*10)/10:0;
+    const totOtR=totCount>0?Math.round(totOt/totCount*1000)/10:0;
+    const monthCellsTot=activeMonths.map(mi=>`<td style="text-align:center;font-weight:700">${totMon[mi]>0?totMon[mi]:'－'}</td>`).join('');
+    return `<tr style="background:#fef9c3;font-weight:700;border-top:2.5px solid #d97706">
+      <td>合計</td>
+      <td>${totCount.toLocaleString()}</td>
+      <td>100%</td>
+      ${monthCellsTot}
+      <td>${totAvgT}</td>
+      <td><span class="pill ${totOtR>=5?'pill-red':totOtR>=2?'pill-amber':'pill-green'}">${totOtR}%</span></td>
+      <td>${totOt.toLocaleString()}</td>
+    </tr>`;
+  })();
 
   // 每月各科業務量表格
   const monthlyThead=document.getElementById('dept-monthly-thead');
@@ -1417,7 +1563,7 @@ function renderCompare(){
     {label:'平均時間(分)',a:da.kpi.avg_time,b:db.kpi.avg_time,d:diff(da.kpi.avg_time,db.kpi.avg_time)},
     {label:'逾時率%',a:da.kpi.ot_rate+'%',b:db.kpi.ot_rate+'%',d:diff(da.kpi.ot_rate,db.kpi.ot_rate,true)},
     {label:'8AM準時率%',a:da.kpi.ontime_rate+'%',b:db.kpi.ontime_rate+'%',d:diff(da.kpi.ontime_rate,db.kpi.ontime_rate,true)},
-    {label:'等候平均時間(分)',a:(da.kpi.wait_avg?.overall||da.kpi.wait_avg||0)+' 分',b:(db.kpi.wait_avg?.overall||db.kpi.wait_avg||0)+' 分',d:diff(da.kpi.wait_avg?.overall||da.kpi.wait_avg||0,db.kpi.wait_avg?.overall||db.kpi.wait_avg||0,false)},
+    {label:'等候時間(分)(中位數)',a:(da.kpi.wait_avg?.overall||da.kpi.wait_avg||0)+' 分',b:(db.kpi.wait_avg?.overall||db.kpi.wait_avg||0)+' 分',d:diff(da.kpi.wait_avg?.overall||da.kpi.wait_avg||0,db.kpi.wait_avg?.overall||db.kpi.wait_avg||0,false)},
     {label:'  白班等候(分)',a:(da.kpi.wait_avg?.white||0)+' 分',b:(db.kpi.wait_avg?.white||0)+' 分',d:diff(da.kpi.wait_avg?.white||0,db.kpi.wait_avg?.white||0,false)},
     {label:'  小夜等候(分)',a:(da.kpi.wait_avg?.evening||0)+' 分',b:(db.kpi.wait_avg?.evening||0)+' 分',d:diff(da.kpi.wait_avg?.evening||0,db.kpi.wait_avg?.evening||0,false)},
     {label:'  大夜等候(分)',a:(da.kpi.wait_avg?.night||0)+' 分',b:(db.kpi.wait_avg?.night||0)+' 分',d:diff(da.kpi.wait_avg?.night||0,db.kpi.wait_avg?.night||0,false)},
