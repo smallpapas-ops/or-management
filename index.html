@@ -840,13 +840,8 @@ function loadDB(){
   try{ const s=localStorage.getItem('or_db_v1'); if(s) DB=JSON.parse(s); }catch(e){}
   if(!DB[114]) DB[114]=JSON.parse(JSON.stringify(BASE_114));
   // 115年：localStorage 有完整資料就用，否則從 DATA_115 初始化
-  // 強制修正 kpi 關鍵欄位（確保與常數一致）
-  if(DB[115]&&DB[115].kpi){
-    DB[115].kpi.total=DATA_115.kpi.total;
-    DB[115].kpi.turnover_avg=DATA_115.kpi.turnover_avg;
-    DB[115].kpi.avg_daily=DATA_115.kpi.avg_daily;
-    DB[115].kpi.wait_avg=DATA_115.kpi.wait_avg; // 強制更新（中位數）
-  }
+  // 判斷是否有匯入額外月份資料
+  const _115imported=DB[115]&&(DB[115].monthly||[]).filter(v=>v>0).length>4;
   if(DB[114]&&DB[114].kpi){
     const _b=BASE_114;
     DB[114].kpi.total=_b.kpi.total;
@@ -857,30 +852,44 @@ function loadDB(){
   if(!DB[115]||!DB[115].kpi||DB[115].kpi.total===0){
     DB[115]=JSON.parse(JSON.stringify(DATA_115));
   } else {
-    // 補齊可能缺少的欄位
-    DB[115].room_util=DATA_115.room_util;
-    DB[115].ontime=DATA_115.ontime; // 強制更新8AM準時率
-    DB[115].kpi.ontime_rate=DATA_115.kpi.ontime_rate;
-    // dept：若localStorage有匯入資料（月份>4個）保留，否則從DATA_115初始化
-    const _hasImported=(DB[115].monthly||[]).filter(v=>v>0).length>4;
-    if(!_hasImported){
+    // 補齊可能缺少的欄位（不覆蓋匯入資料）
+    if(!_115imported){
+      // 未匯入額外月份：從 DATA_115 初始化
       DB[115].dept=JSON.parse(JSON.stringify(DATA_115.dept));
       DB[115].monthly_dept=DATA_115.monthly_dept;
+      DB[115].kpi.total=DATA_115.kpi.total;
+      DB[115].kpi.avg_daily=DATA_115.kpi.avg_daily;
+      DB[115].kpi.turnover_avg=DATA_115.kpi.turnover_avg;
     }
+    // 以下不論是否有匯入，都更新（這些是從XLS重算的固定值）
+    DB[115].ontime=DATA_115.ontime;
+    DB[115].kpi.ontime_rate=DATA_115.kpi.ontime_rate;
+    DB[115].kpi.wait_avg=DATA_115.kpi.wait_avg;
   }
   DB[115].dept_night=DEPT_NIGHT_115;
-  // 補齊 cvs
   if(!DB[115].cvs||!DB[115].cvs.total) DB[115].cvs=DATA_115.cvs;
-  // 補齊 room_turnover
-  DB[115].room_turnover=DATA_115.room_turnover; // 每次強制更新定義
-  DB[115].turnover_dept=DATA_115.turnover_dept; // 強制更新
-  // 補齊 wait_avg 和 avg_daily
-  if(!DB[115].kpi.wait_avg||!DB[115].kpi.wait_avg.overall||DB[115].kpi.wait_avg.overall===0)
-    DB[115].kpi.wait_avg=DATA_115.kpi.wait_avg;
-  if(!DB[115].kpi.avg_daily||DB[115].kpi.avg_daily<20)
-    DB[115].kpi.avg_daily=DATA_115.kpi.avg_daily;
-  // 補齊 room_util
-  if(!DB[115].room_util||DB[115].room_util.length===0) DB[115].room_util=DATA_115.room_util;
+  if(!_115imported){
+    DB[115].room_turnover=DATA_115.room_turnover;
+    DB[115].turnover_dept=DATA_115.turnover_dept;
+    DB[115].room_util=DATA_115.room_util;
+  } else {
+    // 有匯入：只補齊空缺欄位
+    if(!DB[115].room_util||DB[115].room_util.length===0) DB[115].room_util=DATA_115.room_util;
+    if(!DB[115].turnover_dept||DB[115].turnover_dept.length===0) DB[115].turnover_dept=DATA_115.turnover_dept;
+  }
+  // 同步 MONTHLY_DETAIL_115
+  if(_115imported&&DB[115].monthly_types){
+    DB[115].monthly_types.forEach((mt,mi)=>{
+      if(!mt)return;
+      MONTHLY_DETAIL_115['門診'][mi]=mt['門診手術']||0;
+      MONTHLY_DETAIL_115['住院'][mi]=mt['住院手術']||0;
+      MONTHLY_DETAIL_115['急診'][mi]=mt['急診手術']||0;
+      MONTHLY_DETAIL_115['緊急'][mi]=mt['緊急手術']||0;
+      MONTHLY_DETAIL_115['危急'][mi]=mt['危急手術']||0;
+      MONTHLY_DETAIL_115['全麻'][mi]=mt['全麻']||0;
+      MONTHLY_DETAIL_115['局麻'][mi]=mt['局麻']||0;
+    });
+  }
   // 補齊 114年缺少的欄位（從 BASE_114 合併）
   const b=BASE_114;
   if(DB[114]){
