@@ -2090,7 +2090,14 @@ function handleXlsImport(evt){
           });
           DB[yr].dept=DB[yr].dept.map(dep=>{
             const k=dep.name;
-            if(_dMon[k]&&_dMon[k].some(v=>v>0)) dep.monthly=_dMon[k];
+            if(_dMon[k]&&_dMon[k].some(v=>v>0)){
+              if(_isMerge){
+                // 合併模式：新月份填入，舊月份保留
+                dep.monthly=(dep.monthly||Array(12).fill(0)).map((v,i)=>_dMon[k][i]>0?_dMon[k][i]:v);
+              } else {
+                dep.monthly=_dMon[k];
+              }
+            }
             return dep;
           });
         }
@@ -2106,6 +2113,19 @@ function handleXlsImport(evt){
       if(yr===115){
         Object.assign(DEPT_MONTHLY_115, DB[115].monthly_dept||{});
         if(DB[115].dept_night) Object.assign(DEPT_NIGHT_115, DB[115].dept_night);
+        // 同步 MONTHLY_DETAIL_115（從 DB[115].monthly_types）
+        if(DB[115].monthly_types){
+          DB[115].monthly_types.forEach((mt,mi)=>{
+            if(!mt)return;
+            MONTHLY_DETAIL_115['門診'][mi]=mt['門診手術']||0;
+            MONTHLY_DETAIL_115['住院'][mi]=mt['住院手術']||0;
+            MONTHLY_DETAIL_115['急診'][mi]=mt['急診手術']||0;
+            MONTHLY_DETAIL_115['緊急'][mi]=mt['緊急手術']||0;
+            MONTHLY_DETAIL_115['危急'][mi]=mt['危急手術']||0;
+            MONTHLY_DETAIL_115['全麻'][mi]=mt['全麻']||0;
+            MONTHLY_DETAIL_115['局麻'][mi]=mt['局麻']||0;
+          });
+        }
         // 更新每月業務量明細（MONTHLY_DETAIL_115）
         const _md=DB[115];
         if(_md&&_md.kpi){
