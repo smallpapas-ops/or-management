@@ -1923,8 +1923,57 @@ function handleXlsImport(evt){
       const result=parseXlsRows(rows);
       if(!result){throw new Error('無法識別欄位格式，請確認是手術病患一覽表');}
       const yr=result.year;
-      delete DB[yr]; // 強制清除舊資料
-      DB[yr]=result.data;
+      // 判斷是否為新月份資料（合併模式）
+      const newMonths=result.data.monthly.map((v,i)=>v>0?i:-1).filter(i=>i>=0);
+      const existMonths=DB[yr]?(DB[yr].monthly||[]).map((v,i)=>v>0?i:-1).filter(i=>i>=0):[];
+      const isNewMonth=newMonths.some(m=>!existMonths.includes(m));
+      const hasOverlap=newMonths.some(m=>existMonths.includes(m));
+
+      if(!DB[yr]||existMonths.length===0||!isNewMonth||hasOverlap){
+        // 全新年度 或 重複月份 → 直接覆蓋
+        delete DB[yr];
+        DB[yr]=result.data;
+      } else {
+        // 新月份 → 合併
+        const base=DB[yr];
+        const nd=result.data;
+        // 月別業務量合計
+        base.monthly=base.monthly.map((v,i)=>v+(nd.monthly[i]||0));
+        base.kpi.total=(base.kpi.total||0)+(nd.kpi.total||0);
+        base.kpi.ot_count=(base.kpi.ot_count||0)+(nd.kpi.ot_count||0);
+        base.kpi.ot_rate=base.kpi.total>0?Math.round(base.kpi.ot_count/base.kpi.total*1000)/10:0;
+        // 平均手術時間（加權平均）
+        const t1=(base.kpi.avg_time||0)*(base.kpi.total-nd.kpi.total);
+        const t2=(nd.kpi.avg_time||0)*nd.kpi.total;
+        base.kpi.avg_time=base.kpi.total>0?Math.round((t1+t2)/base.kpi.total*10)/10:0;
+        // 每日平均
+        const activeMons=base.monthly.filter(v=>v>0).length||1;
+        base.kpi.avg_daily=Math.round(base.kpi.total/activeMons*10)/10;
+        // 手術別合計
+        Object.keys(nd.types||{}).forEach(k=>{base.types[k]=(base.types[k]||0)+(nd.types[k]||0);});
+        // 班別合計
+        Object.keys(nd.shift||{}).forEach(k=>{base.shift[k]=(base.shift[k]||0)+(nd.shift[k]||0);});
+        // 科別月別合計
+        nd.dept.forEach(ndep=>{
+          const bdep=base.dept.find(d=>d.name===ndep.name);
+          if(bdep){
+            bdep.count+=ndep.count;
+            bdep.ot_count+=ndep.ot_count;
+            bdep.ot_rate=bdep.count>0?Math.round(bdep.ot_count/bdep.count*1000)/10:0;
+            const w1=(bdep.avg_time||0)*(bdep.count-ndep.count);
+            const w2=(ndep.avg_time||0)*ndep.count;
+            bdep.avg_time=bdep.count>0?Math.round((w1+w2)/bdep.count*10)/10:0;
+            bdep.monthly=bdep.monthly.map((v,i)=>v+(ndep.monthly[i]||0));
+          } else {
+            base.dept.push({...ndep});
+          }
+        });
+        base.dept.sort((a,b)=>b.count-a.count);
+        // 達文西
+        base.kpi.dv_count=(base.kpi.dv_count||0)+(nd.kpi.dv_count||0);
+        toast(`✓ 已合併 ${yr}年 ${newMonths.map(i=>i+1+'月').join('、')} 資料`, 'success');
+        DB[yr]=base;
+      }
       // 建立 monthly_dept 查找表（key=科別名稱, value=Array(12)）
       DB[yr].monthly_dept={};
       (DB[yr].dept||[]).forEach(dep=>{
