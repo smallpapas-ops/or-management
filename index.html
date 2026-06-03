@@ -828,6 +828,7 @@ const DATA_115={
     crit_achv_rate:0,crit_achv:0,crit_total:0
   },
   davinci:{total:12,avg_time:0,monthly:[0,0,0,0,0,0,0,0,0,0,0,0],dept:{},quarterly:{Q1:0,Q2:0,Q3:0,Q4:0},ontime_rate:0},
+  monthly_types:[{"門診手術": 560, "住院手術": 436, "急診手術": 238, "緊急手術": 22, "危急手術": 5, "全麻": 790, "局麻": 471}, {"門診手術": 391, "住院手術": 358, "急診手術": 216, "緊急手術": 15, "危急手術": 3, "全麻": 652, "局麻": 331}, {"門診手術": 586, "住院手術": 487, "急診手術": 250, "緊急手術": 14, "危急手術": 2, "全麻": 828, "局麻": 511}, {"門診手術": 540, "住院手術": 520, "急診手術": 222, "緊急手術": 13, "危急手術": 0, "全麻": 826, "局麻": 469}, {"門診手術": 0, "住院手術": 0, "急診手術": 0, "緊急手術": 0, "危急手術": 0, "全麻": 0, "局麻": 0}, {"門診手術": 0, "住院手術": 0, "急診手術": 0, "緊急手術": 0, "危急手術": 0, "全麻": 0, "局麻": 0}, {"門診手術": 0, "住院手術": 0, "急診手術": 0, "緊急手術": 0, "危急手術": 0, "全麻": 0, "局麻": 0}, {"門診手術": 0, "住院手術": 0, "急診手術": 0, "緊急手術": 0, "危急手術": 0, "全麻": 0, "局麻": 0}, {"門診手術": 0, "住院手術": 0, "急診手術": 0, "緊急手術": 0, "危急手術": 0, "全麻": 0, "局麻": 0}, {"門診手術": 0, "住院手術": 0, "急診手術": 0, "緊急手術": 0, "危急手術": 0, "全麻": 0, "局麻": 0}, {"門診手術": 0, "住院手術": 0, "急診手術": 0, "緊急手術": 0, "危急手術": 0, "全麻": 0, "局麻": 0}, {"門診手術": 0, "住院手術": 0, "急診手術": 0, "緊急手術": 0, "危急手術": 0, "全麻": 0, "局麻": 0}],
   cvs:{total:355,cabg:4,cabg_avg:480.0,ecmo:0,ecmo_avg:0,valve:4,valve_avg:537.2,
        cabg_monthly:[1,0,2,1,0,0,0,0,0,0,0,0],ecmo_monthly:[0,0,0,0,0,0,0,0,0,0,0,0],valve_monthly:[1,0,2,1,0,0,0,0,0,0,0,0]}
 };
@@ -860,9 +861,12 @@ function loadDB(){
     DB[115].room_util=DATA_115.room_util;
     DB[115].ontime=DATA_115.ontime; // 強制更新8AM準時率
     DB[115].kpi.ontime_rate=DATA_115.kpi.ontime_rate;
-    // 強制更新 dept（確保口腔外科合併、婦產科扣除DR等正確）
-    DB[115].dept=JSON.parse(JSON.stringify(DATA_115.dept));
-    DB[115].monthly_dept=DATA_115.monthly_dept;
+    // dept：若localStorage有匯入資料（月份>4個）保留，否則從DATA_115初始化
+    const _hasImported=(DB[115].monthly||[]).filter(v=>v>0).length>4;
+    if(!_hasImported){
+      DB[115].dept=JSON.parse(JSON.stringify(DATA_115.dept));
+      DB[115].monthly_dept=DATA_115.monthly_dept;
+    }
   }
   DB[115].dept_night=DEPT_NIGHT_115;
   // 補齊 cvs
@@ -1928,8 +1932,9 @@ function handleXlsImport(evt){
       const existMonths=DB[yr]?(DB[yr].monthly||[]).map((v,i)=>v>0?i:-1).filter(i=>i>=0):[];
       const isNewMonth=newMonths.some(m=>!existMonths.includes(m));
       const hasOverlap=newMonths.some(m=>existMonths.includes(m));
+      const _isMerge=DB[yr]&&existMonths.length>0&&isNewMonth&&!hasOverlap;
 
-      if(!DB[yr]||existMonths.length===0||!isNewMonth||hasOverlap){
+      if(!_isMerge){
         // 全新年度 或 重複月份 → 直接覆蓋
         delete DB[yr];
         DB[yr]=result.data;
@@ -1971,6 +1976,27 @@ function handleXlsImport(evt){
         base.dept.sort((a,b)=>b.count-a.count);
         // 達文西
         base.kpi.dv_count=(base.kpi.dv_count||0)+(nd.kpi.dv_count||0);
+        // 每月手術別/麻醉別合計
+        if(!base.monthly_types) base.monthly_types=Array(12).fill(null).map(()=>({'門診手術':0,'住院手術':0,'急診手術':0,'緊急手術':0,'危急手術':0,'全麻':0,'局麻':0}));
+        if(nd.monthly_types){
+          nd.monthly_types.forEach((mt,mi)=>{
+            if(!mt)return;
+            Object.keys(mt).forEach(k=>{base.monthly_types[mi][k]=(base.monthly_types[mi][k]||0)+mt[k];});
+          });
+        }
+        // 直接更新 MONTHLY_DETAIL_115
+        if(yr===115){
+          base.monthly_types.forEach((mt,mi)=>{
+            if(!mt)return;
+            MONTHLY_DETAIL_115['門診'][mi]=mt['門診手術']||0;
+            MONTHLY_DETAIL_115['住院'][mi]=mt['住院手術']||0;
+            MONTHLY_DETAIL_115['急診'][mi]=mt['急診手術']||0;
+            MONTHLY_DETAIL_115['緊急'][mi]=mt['緊急手術']||0;
+            MONTHLY_DETAIL_115['危急'][mi]=mt['危急手術']||0;
+            MONTHLY_DETAIL_115['全麻'][mi]=mt['全麻']||0;
+            MONTHLY_DETAIL_115['局麻'][mi]=mt['局麻']||0;
+          });
+        }
         toast(`✓ 已合併 ${yr}年 ${newMonths.map(i=>i+1+'月').join('、')} 資料`, 'success');
         DB[yr]=base;
       }
@@ -2080,6 +2106,34 @@ function handleXlsImport(evt){
       if(yr===115){
         Object.assign(DEPT_MONTHLY_115, DB[115].monthly_dept||{});
         if(DB[115].dept_night) Object.assign(DEPT_NIGHT_115, DB[115].dept_night);
+        // 更新每月業務量明細（MONTHLY_DETAIL_115）
+        const _md=DB[115];
+        if(_md&&_md.kpi){
+          ['門診','住院','急診','緊急','危急','全麻','局麻'].forEach(k=>{
+            MONTHLY_DETAIL_115[k]=Array(12).fill(0);
+          });
+          (_md.dept||[]).forEach(dep=>{
+            (dep.monthly||[]).forEach((v,i)=>{
+              // 各科月別加入dept但無法分手術別，需從types重建
+            });
+          });
+          // 直接從 MONTHLY_DETAIL_115 各月索引重建（若已有合併資料）
+          const _mon=_md.monthly||[];
+          _mon.forEach((total,mi)=>{
+            if(total<=0) return;
+            // 若有 monthly_types 用它，否則用整體比例估算
+            if(_md.monthly_types&&_md.monthly_types[mi]){
+              const mt=_md.monthly_types[mi];
+              MONTHLY_DETAIL_115['門診'][mi]=mt['門診手術']||0;
+              MONTHLY_DETAIL_115['住院'][mi]=mt['住院手術']||0;
+              MONTHLY_DETAIL_115['急診'][mi]=mt['急診手術']||0;
+              MONTHLY_DETAIL_115['緊急'][mi]=mt['緊急手術']||0;
+              MONTHLY_DETAIL_115['危急'][mi]=mt['危急手術']||0;
+              MONTHLY_DETAIL_115['全麻'][mi]=mt['全麻']||0;
+              MONTHLY_DETAIL_115['局麻'][mi]=mt['局麻']||0;
+            }
+          });
+        }
       }
       saveDB(); autoSync(yr); refreshAll();
       bar.style.width='100%'; status.textContent=`✓ ${yr}年資料解析完成（${result.data.kpi.total.toLocaleString()}件）`;
@@ -2430,6 +2484,24 @@ function parseXlsRows(rows){
   } else if(data.turnover_dept&&data.turnover_dept.length>0){
     data.kpi.turnover_avg=Math.round(data.turnover_dept.reduce((s,t)=>s+t.avg,0)/data.turnover_dept.length*10)/10;
   }
+  // 每月各手術別件數（供合併後更新MONTHLY_DETAIL用）
+  const _isGA=v=>v&&['A','B','E','H','I'].includes(String(v)[0]);
+  data.monthly_types=Array(12).fill(null).map(()=>({'門診手術':0,'住院手術':0,'急診手術':0,'緊急手術':0,'危急手術':0,'全麻':0,'局麻':0}));
+  dataRows.forEach(r=>{
+    const m=getRocMonth(r[colDate]);
+    if(m<1||m>12)return;
+    const rm=String(r[colRoom]||'').trim().toUpperCase();
+    if(!OR_ROOMS.includes(rm))return;
+    const dept=String(r[colMap['科別名稱']]||'').trim();
+    if(dept==='婦產科'&&rm==='DR')return;
+    const mi=m-1;
+    const stype=String(r[colMap['手術別']]||'');
+    const anes=r[colMap['麻醉方式']];
+    if(data.monthly_types[mi][stype]!=null) data.monthly_types[mi][stype]++;
+    if(_isGA(anes)) data.monthly_types[mi]['全麻']++;
+    else data.monthly_types[mi]['局麻']++;
+  });
+
   return {year,data};
 }
 
