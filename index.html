@@ -1933,6 +1933,7 @@ function handleXlsImport(evt){
       const isNewMonth=newMonths.some(m=>!existMonths.includes(m));
       const hasOverlap=newMonths.some(m=>existMonths.includes(m));
       const _isMerge=DB[yr]&&existMonths.length>0&&isNewMonth&&!hasOverlap;
+      console.log('[Merge] newMonths='+JSON.stringify(newMonths)+' existMonths='+JSON.stringify(existMonths)+' _isMerge='+_isMerge);
 
       if(!_isMerge){
         // 全新年度 或 重複月份 → 直接覆蓋
@@ -2207,9 +2208,27 @@ function parseXlsRows(rows){
   };
   const getRocDate=v=>{
     if(v==null)return{y:null,m:null,d:null};
+    // JS Date 物件（cellDates:true 時，Excel序列日轉成的Date）
+    // 1150501 的 Excel serial = 約 1,150,501，對應西元約西元5050年
+    // 所以 Date 物件來自整數欄位時是錯誤的，要從原始字串取
+    // 實際上 cellDates:true 只影響 Excel date-format 的欄位
+    // 純數字欄位（如1150501）仍保持為數字，不會變成Date
+    if(v instanceof Date){
+      // 真正的日期欄位：從 getFullYear 反推民國年
+      const gy=v.getFullYear();
+      if(gy>1900&&gy<2100)return{y:gy-1911,m:v.getMonth()+1,d:v.getDate()};
+      return{y:null,m:null,d:null};
+    }
     const s=String(v).trim().replace(/\//g,'').replace(/-/g,'').replace(/ .*/,'');
     // 整數 1150401 或字串 115/04/01
-    if(s.length>=7){return{y:parseInt(s.slice(0,3)),m:parseInt(s.slice(3,5)),d:parseInt(s.slice(5,7))};}
+    if(s.length>=7){
+      const y=parseInt(s.slice(0,3));
+      // 民國年應在 100~130 之間
+      if(y>=100&&y<=130){return{y,m:parseInt(s.slice(3,5)),d:parseInt(s.slice(5,7))};}
+    }
+    // 字串格式 115/05/01
+    const m2=s.match(/^(1[0-2][0-9])(0[1-9]|1[0-2])(0[1-9]|[12][0-9]|3[01])$/);
+    if(m2)return{y:parseInt(m2[1]),m:parseInt(m2[2]),d:parseInt(m2[3])};
     return{y:null,m:null,d:null};
   };
   const getRocMonth=v=>{const{m}=getRocDate(v);return m;};
