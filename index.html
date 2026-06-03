@@ -2334,6 +2334,14 @@ function parseXlsRows(rows){
       if(totalFirst2===0)return{overall:0,monthly:Array(12).fill(0),by_room:[]};
       const ontimeEntries2=entries2.filter(([,e])=>isOntime2(e.inT));
       // 整體準時率 = 各有效房間準時率的簡單平均（排除OR01、OR8A、OR12、DR）
+      // by_room（先計算，再用於整體準時率）
+      const roomFirst2={},roomOntime2={};
+      entries2.forEach(([,e])=>{
+        const rm=e.rm;
+        roomFirst2[rm]=(roomFirst2[rm]||0)+1;
+        if(isOntime2(e.inT))roomOntime2[rm]=(roomOntime2[rm]||0)+1;
+      });
+      // 整體準時率（排除OR01、OR8A、OR12、DR）
       const EXCLUDE_OVERALL=['01','8A','DR','12'];
       const validRooms2=OR_ROOMS.filter(rm=>!EXCLUDE_OVERALL.includes(rm)&&roomFirst2[rm]>0);
       const roomRates2=validRooms2.map(rm=>Math.round((roomOntime2[rm]||0)/roomFirst2[rm]*1000)/10);
@@ -2347,13 +2355,6 @@ function parseXlsRows(rows){
         if(isOntime2(e.inT))monOntime[mi]++;
       });
       const monthly2=monFirst.map((n,i)=>n>0?Math.round(monOntime[i]/n*1000)/10:0);
-      // by_room
-      const roomFirst2={},roomOntime2={};
-      entries2.forEach(([,e])=>{
-        const rm=e.rm;
-        roomFirst2[rm]=(roomFirst2[rm]||0)+1;
-        if(isOntime2(e.inT))roomOntime2[rm]=(roomOntime2[rm]||0)+1;
-      });
       // by_room 包含所有房間（含OR01、OR8A、OR12），DR 除外
       const by_room2=OR_ROOMS.filter(rm=>roomFirst2[rm]>0&&rm!=='DR').map(rm=>({
         room:'OR'+rm,
