@@ -1981,6 +1981,7 @@ function handleXlsImport(evt){
         // 每月手術別/麻醉別合計
         if(!base.monthly_types) base.monthly_types=Array(12).fill(null).map(()=>({'門診手術':0,'住院手術':0,'急診手術':0,'緊急手術':0,'危急手術':0,'全麻':0,'局麻':0}));
         if(nd.monthly_types){
+          console.log('[Merge] nd.monthly_types[4]='+JSON.stringify(nd.monthly_types[4]));
           nd.monthly_types.forEach((mt,mi)=>{
             if(!mt)return;
             Object.keys(mt).forEach(k=>{base.monthly_types[mi][k]=(base.monthly_types[mi][k]||0)+mt[k];});
@@ -1988,6 +1989,7 @@ function handleXlsImport(evt){
         }
         // 直接更新 MONTHLY_DETAIL_115
         if(yr===115){
+          console.log('[Merge] monthly_types[4]='+JSON.stringify(base.monthly_types[4]));
           base.monthly_types.forEach((mt,mi)=>{
             if(!mt)return;
             MONTHLY_DETAIL_115['門診'][mi]=mt['門診手術']||0;
@@ -3046,8 +3048,9 @@ function initAutoSync(){
   const inp = document.getElementById('as-url');
   if(inp) inp.value = url;
   updateAsBadge(true);
-  autoSyncPull();
-  setInterval(autoSyncPull, 60000);
+  // 不自動從雲端拉取（避免覆蓋本地匯入的新資料）
+  // autoSyncPull();
+  // setInterval(autoSyncPull, 60000);
 }
 // ══ end Apps Script 自動同步 ═══════════════════════════
 
