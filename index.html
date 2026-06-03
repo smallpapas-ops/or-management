@@ -1923,6 +1923,7 @@ function handleXlsImport(evt){
       const wb=XLSX.read(e.target.result,{type:'binary',cellDates:true});
       const ws=wb.Sheets[wb.SheetNames[0]];
       const rows=XLSX.utils.sheet_to_json(ws,{header:1,defval:null});
+      console.log('[OR] SheetNames='+JSON.stringify(wb.SheetNames)+' rows='+rows.length+' row0='+JSON.stringify((rows[0]||[]).slice(0,4)));
       bar.style.width='70%'; status.textContent='計算統計指標…';
       const result=parseXlsRows(rows);
       if(!result){throw new Error('無法識別欄位格式，請確認是手術病患一覽表');}
