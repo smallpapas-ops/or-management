@@ -1031,16 +1031,31 @@ function mkChart(id,type,data,opts){
               ctx.textAlign='center';
               ctx.fillText(pct+'%',cp.x,cp.y);
             } else if(isHoriz){
-              ctx.fillStyle=TC;
-              ctx.textAlign='left';
-              // 分兩行顯示：件數 + 百分比
+              // 水平長條：件數在右側，% 在件數後面小字
               const lines=lbl.split('\n');
-              if(lines.length===2){
-                ctx.fillText(lines[0],bar.x+6,cp.y-7);
-                ctx.fillStyle=TC.replace(')',',0.65)').replace('rgb','rgba');
-                ctx.fillText(lines[1],bar.x+6,cp.y+7);
+              const valStr=lines[0]||lbl;
+              const pctStr=lines[1]||'';
+              // 計算長條末端位置
+              const barEnd=bar.x;
+              const chartWidth=chart.chartArea.right;
+              const spaceRight=chartWidth-barEnd;
+              if(spaceRight>60){
+                // 右側空間夠：件數在長條右側
+                ctx.fillStyle=TC;
+                ctx.textAlign='left';
+                ctx.font='bold 11px sans-serif';
+                ctx.fillText(valStr,barEnd+6,cp.y);
+                if(pctStr){
+                  ctx.font='10px sans-serif';
+                  ctx.fillStyle=TC.replace ? TC.replace('rgb(','rgba(').replace(')',',0.6)') : '#888';
+                  ctx.fillText(pctStr,barEnd+6+ctx.measureText(valStr).width+4,cp.y);
+                }
               } else {
-                ctx.fillText(lbl,bar.x+6,cp.y);
+                // 右側空間不足：顯示在長條內
+                ctx.fillStyle='#fff';
+                ctx.textAlign='right';
+                ctx.font='bold 10px sans-serif';
+                ctx.fillText(valStr,barEnd-4,cp.y);
               }
             } else {
               ctx.fillStyle=TC;
@@ -1110,10 +1125,20 @@ function renderOverview(d){
   },{responsive:true,maintainAspectRatio:false,_labels:true,_fmt:'pct',cutout:'55%',plugins:{legend:{display:true,position:'right',labels:{color:TC,font:{size:11},boxWidth:10,generateLabels(chart){const ds=chart.data.datasets[0];const total=ds.data.reduce((a,b)=>a+b,0);return chart.data.labels.map((l,i)=>({text:l+' '+ds.data[i].toLocaleString()+' ('+Math.round(ds.data[i]/total*1000)/10+'%)',fillStyle:ds.backgroundColor[i],strokeStyle:ds.backgroundColor[i],hidden:false,index:i}));}}}}});
 
   const top8=d.dept.slice(0,8);
+  // 科別 TOP8：y軸標籤加入科別名稱，長條右側顯示件數+比率
+  const deptTotal=d.dept.slice(0,8).reduce((s,x)=>s+x.count,0);
   mkChart('c-dept-ov','bar',{
-    labels:top8.map(x=>x.name),
+    labels:top8.map(x=>x.name+'  '+x.count.toLocaleString()+' ('+Math.round(x.count/d.kpi.total*1000)/10+'%)'),
     datasets:[{data:top8.map(x=>x.count),backgroundColor:COLORS.blue,borderRadius:3,borderSkipped:false}]
-  },{...baseOpts(),_labels:true,indexAxis:'y',scales:{x:{...baseOpts().scales.x,beginAtZero:true},y:{...baseOpts().scales.y,ticks:{color:TC,font:{size:11}}}}});
+  },{...baseOpts(),indexAxis:'y',
+    scales:{
+      x:{...baseOpts().scales.x,beginAtZero:true,ticks:{color:TC}},
+      y:{...baseOpts().scales.y,ticks:{color:TC,font:{size:11},callback:function(val){
+        // y軸直接顯示科別名稱（不含數字，因為labels已含）
+        return this.getLabelForValue(val);
+      }}}
+    }
+  });
 }
 
 // ════════════════════════════════════════════════
