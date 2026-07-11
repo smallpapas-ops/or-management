@@ -818,8 +818,8 @@ var NIGHT_ANES_115={"一般外科": {"全麻": 38, "局麻": 0, "合計": 38}, "
 function loadDB(){
   try{ const s=localStorage.getItem('or_db_v1'); if(s) DB=JSON.parse(s); }catch(e){}
   // 資料版本戳：若內建資料已更新（XLS重算），強制清除舊的115年 localStorage 資料
-  const DATA_115_STAMP='20260711-inc3';
-  const DATA_114_STAMP='20260711-inc3';
+  const DATA_115_STAMP='20260711-inc4';
+  const DATA_114_STAMP='20260711-inc4';
   const storedStamp=localStorage.getItem('or_data115_stamp')||'';
   const storedStamp114=localStorage.getItem('or_data114_stamp')||'';
   if(storedStamp!==DATA_115_STAMP || storedStamp114!==DATA_114_STAMP){
@@ -1726,16 +1726,16 @@ function renderIncision(d){
             const cnt=overall[i]||0; const pct=opcts[i]||0;
             const tops=st3[i]||[];
             const topTags=tops.map(t=>
-              `<span style="display:inline-flex;align-items:center;gap:3px;background:${SLOT_COLORS[i]}22;color:${SLOT_COLORS[i]};font-size:11px;font-weight:600;padding:2px 7px;border-radius:10px;white-space:nowrap">
+              `<span style="display:inline-flex;align-items:center;gap:3px;background:${SLOT_COLORS[i]}22;color:${SLOT_COLORS[i]};font-size:13px;font-weight:600;padding:2px 7px;border-radius:10px;white-space:nowrap">
                 ${t.dept} <span style="opacity:0.7">${t.cnt}場</span>
               </span>`
             ).join('');
             return `<div>
               <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-                <span style="font-size:13px;font-weight:700;color:${SLOT_COLORS[i]}">${s}</span>
-                <span style="font-size:13px;font-weight:700">${cnt} 場 <span style="color:var(--text3);font-weight:400">(${pct}%)</span></span>
+                <span style="font-size:15px;font-weight:700;color:${SLOT_COLORS[i]}">${s}</span>
+                <span style="font-size:15px;font-weight:700">${cnt} 場 <span style="color:var(--text3);font-weight:400">(${pct}%)</span></span>
               </div>
-              <div style="height:7px;background:var(--bg);border-radius:4px;overflow:hidden;margin-bottom:5px">
+              <div style="height:10px;background:var(--bg);border-radius:4px;overflow:hidden;margin-bottom:5px">
                 <div style="height:100%;width:${pct}%;background:${SLOT_COLORS[i]};border-radius:4px"></div>
               </div>
               <div style="display:flex;flex-wrap:wrap;gap:4px">${topTags}</div>
@@ -1750,22 +1750,22 @@ function renderIncision(d){
   const depts = Object.keys(iData.dept);
   html += `<div class="card">
     <div class="card-header"><span class="card-title">各科首台下刀時間明細</span>
-      <span style="font-size:12px;color:var(--text3);margin-left:8px">僅統計白班第一台（排除OR01/OR8A/OR12）｜<span style="background:#ef4444;color:#fff;padding:1px 6px;border-radius:4px;font-size:11px">▲ 各科最常見時段</span></span>
+      <span style="font-size:14px;color:var(--text3);margin-left:8px">僅統計白班第一台（排除OR01/OR8A/OR12）｜<span style="background:#ef4444;color:#fff;padding:1px 6px;border-radius:4px;font-size:13px">▲ 各科最常見時段</span></span>
     </div>
     <div style="overflow-x:auto">
-    <table style="width:100%;border-collapse:collapse;font-size:13px">
+    <table style="width:100%;border-collapse:collapse;font-size:15px">
       <thead>
         <tr style="background:var(--bg)">
-          <th style="text-align:left;padding:8px 12px;font-weight:700;border-bottom:2px solid var(--border);white-space:nowrap">科別</th>
-          <th style="text-align:center;padding:8px 6px;font-weight:700;border-bottom:2px solid var(--border);white-space:nowrap;color:#059669">8:00<br>-8:10</th>
-          <th style="text-align:center;padding:8px 6px;font-weight:700;border-bottom:2px solid var(--border);white-space:nowrap;color:#10b981">8:11<br>-8:20</th>
-          <th style="text-align:center;padding:8px 6px;font-weight:700;border-bottom:2px solid var(--border);white-space:nowrap;color:#6ee7b7">8:21<br>-8:30</th>
-          <th style="text-align:center;padding:8px 6px;font-weight:700;border-bottom:2px solid var(--border);white-space:nowrap;color:#fbbf24">8:31<br>-8:40</th>
-          <th style="text-align:center;padding:8px 6px;font-weight:700;border-bottom:2px solid var(--border);white-space:nowrap;color:#f59e0b">8:41<br>-8:50</th>
-          <th style="text-align:center;padding:8px 6px;font-weight:700;border-bottom:2px solid var(--border);white-space:nowrap;color:#ef4444">8:51<br>-9:00</th>
-          <th style="text-align:center;padding:8px 6px;font-weight:700;border-bottom:2px solid var(--border);white-space:nowrap;color:#991b1b">9:01<br>之後</th>
-          <th style="text-align:center;padding:8px 8px;font-weight:700;border-bottom:2px solid var(--border)">合計</th>
-          <th style="text-align:center;padding:8px 8px;font-weight:700;border-bottom:2px solid var(--border);color:#059669">8:30前<br>比率</th>
+          <th style="text-align:left;padding:10px 14px;font-weight:700;border-bottom:2px solid var(--border);white-space:nowrap">科別</th>
+          <th style="text-align:center;padding:10px 8px;font-weight:700;border-bottom:2px solid var(--border);white-space:nowrap;color:#059669">8:00<br>-8:10</th>
+          <th style="text-align:center;padding:10px 8px;font-weight:700;border-bottom:2px solid var(--border);white-space:nowrap;color:#10b981">8:11<br>-8:20</th>
+          <th style="text-align:center;padding:10px 8px;font-weight:700;border-bottom:2px solid var(--border);white-space:nowrap;color:#6ee7b7">8:21<br>-8:30</th>
+          <th style="text-align:center;padding:10px 8px;font-weight:700;border-bottom:2px solid var(--border);white-space:nowrap;color:#fbbf24">8:31<br>-8:40</th>
+          <th style="text-align:center;padding:10px 8px;font-weight:700;border-bottom:2px solid var(--border);white-space:nowrap;color:#f59e0b">8:41<br>-8:50</th>
+          <th style="text-align:center;padding:10px 8px;font-weight:700;border-bottom:2px solid var(--border);white-space:nowrap;color:#ef4444">8:51<br>-9:00</th>
+          <th style="text-align:center;padding:10px 8px;font-weight:700;border-bottom:2px solid var(--border);white-space:nowrap;color:#991b1b">9:01<br>之後</th>
+          <th style="text-align:center;padding:10px 10px;font-weight:700;border-bottom:2px solid var(--border)">合計</th>
+          <th style="text-align:center;padding:10px 10px;font-weight:700;border-bottom:2px solid var(--border);color:#059669">8:30前<br>比率</th>
         </tr>
       </thead>
       <tbody>`;
@@ -1777,23 +1777,23 @@ function renderIncision(d){
     const earlyPct=tot>0?Math.round(early/tot*1000)/10:0;
     const maxCnt=Math.max(...s);
     html+=`<tr style="border-bottom:1px solid var(--border);background:${di%2===0?'var(--card)':'var(--bg)'}">
-      <td style="padding:8px 12px;font-weight:600;white-space:nowrap">${dept}</td>
+      <td style="padding:10px 14px;font-weight:600;white-space:nowrap">${dept}</td>
       ${s.map((cnt,i)=>{
         const isMax=(cnt===maxCnt && cnt>0);
-        if(cnt===0) return `<td style="text-align:center;padding:7px 6px;color:var(--text3)">－</td>`;
-        return `<td style="text-align:center;padding:7px 6px;
+        if(cnt===0) return `<td style="text-align:center;padding:9px 8px;color:var(--text3)">－</td>`;
+        return `<td style="text-align:center;padding:9px 8px;
           color:${isMax?'#fff':SLOT_COLORS[i]};
           font-weight:${isMax?'800':'600'};
           background:${isMax?SLOT_COLORS[i]:'transparent'};
           border-radius:${isMax?'6px':'0'};
           position:relative">
-          ${isMax?'<span style="position:absolute;top:2px;right:4px;font-size:9px">▲</span>':''}
+          ${isMax?'<span style="position:absolute;top:2px;right:4px;font-size:11px">▲</span>':''}
           ${cnt}<br>
-          <span style="font-size:10px;color:${isMax?'rgba(255,255,255,0.85)':'var(--text3)'}">${p[i]}%</span>
+          <span style="font-size:12px;color:${isMax?'rgba(255,255,255,0.85)':'var(--text3)'}">${p[i]}%</span>
         </td>`;
       }).join('')}
-      <td style="text-align:center;padding:7px 8px;font-weight:700">${tot}</td>
-      <td style="text-align:center;padding:7px 8px">
+      <td style="text-align:center;padding:9px 10px;font-weight:700">${tot}</td>
+      <td style="text-align:center;padding:9px 10px">
         <span style="font-weight:700;color:${earlyPct>=70?'#059669':earlyPct>=50?'#f59e0b':'#ef4444'}">${earlyPct}%</span>
       </td>
     </tr>`;
@@ -1801,13 +1801,13 @@ function renderIncision(d){
 
   // 合計列
   html+=`<tr style="border-top:2px solid var(--border);background:var(--bg)">
-    <td style="padding:8px 12px;font-weight:700">合計</td>
+    <td style="padding:10px 14px;font-weight:700">合計</td>
     ${overall.map((cnt,i)=>cnt>0
-      ?`<td style="text-align:center;padding:7px 6px;font-weight:700;color:${SLOT_COLORS[i]}">${cnt}<br><span style="font-size:10px">${opcts[i]}%</span></td>`
-      :`<td style="text-align:center;padding:7px 6px;color:var(--text3)">－</td>`
+      ?`<td style="text-align:center;padding:9px 8px;font-weight:700;color:${SLOT_COLORS[i]}">${cnt}<br><span style="font-size:12px">${opcts[i]}%</span></td>`
+      :`<td style="text-align:center;padding:9px 8px;color:var(--text3)">－</td>`
     ).join('')}
-    <td style="text-align:center;padding:7px 8px;font-weight:700">${gt}</td>
-    <td style="text-align:center;padding:7px 8px;font-weight:700;color:#059669">${Math.round((overall[0]+overall[1]+overall[2])/gt*1000)/10}%</td>
+    <td style="text-align:center;padding:9px 10px;font-weight:700">${gt}</td>
+    <td style="text-align:center;padding:9px 10px;font-weight:700;color:#059669">${Math.round((overall[0]+overall[1]+overall[2])/gt*1000)/10}%</td>
   </tr>`;
 
   html+='</tbody></table></div></div>';
