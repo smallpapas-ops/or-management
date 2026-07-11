@@ -245,6 +245,7 @@ td input:focus{outline:none;border-color:var(--blue-m)}
   <div class="nav-item" onclick="goPage('emerg',this)"><span class="nav-icon">🚨</span>急診業務量</div>
   <div class="nav-item" onclick="goPage('davinci',this)"><span class="nav-icon">🤖</span>達文西手術</div>
   <div class="nav-item" onclick="goPage('cvs',this)"><span class="nav-icon">❤️</span>心臟外科</div>
+  <div class="nav-item" onclick="goPage('top5ops',this)"><span class="nav-icon">🏆</span>各科前5大手術</div>
 
   <div class="nav-section">年度管理</div>
   <div class="nav-item" onclick="goPage('compare',this)"><span class="nav-icon">📈</span>年度比較</div>
@@ -487,6 +488,11 @@ td input:focus{outline:none;border-color:var(--blue-m)}
   </div>
 
   <!-- ══ 年度比較 ══ -->
+  <div class="page-section" id="page-top5ops">
+    <div class="kpi-grid" id="kpi-top5ops"></div>
+    <div id="top5ops-content"></div>
+  </div>
+
   <div class="page-section" id="page-compare">
     <div class="card mb16" style="padding:16px">
       <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
@@ -741,6 +747,9 @@ td input:focus{outline:none;border-color:var(--blue-m)}
 // ════════════════════════════════════════════════════
 // DATA STORE
 // ════════════════════════════════════════════════════
+var TOP5_OPS_114={"泌尿科": [{"name": "Cystoscopy + retrograde  ureteral catheterization", "count": 640, "pct": 20.7}, {"name": "Ureteroscopy & removal of ureteral stone,with SON", "count": 580, "pct": 18.8}, {"name": "Transrectal ultrasound guided prostatebiopsy", "count": 240, "pct": 7.8}, {"name": "Cystoscopy", "count": 173, "pct": 5.6}, {"name": "銩雷射攝護腺手術", "count": 146, "pct": 4.7}], "眼科": [{"name": "水晶體囊內(外)摘除及人工水晶體置入", "count": 1642, "pct": 54.6}, {"name": "Intravitreal injection of an anti-VEGF agent", "count": 676, "pct": 22.5}, {"name": "Intravitreous injection", "count": 248, "pct": 8.3}, {"name": "玻璃體內注射抗新生血管藥物Avastin", "count": 198, "pct": 6.6}, {"name": "Microincision vitreomacular surgery", "count": 42, "pct": 1.4}], "骨科": [{"name": "Total knee replacement", "count": 238, "pct": 8.5}, {"name": "Open reduction for fracture of radius，ulna", "count": 237, "pct": 8.5}, {"name": "Percutaneous vertebroplasty (1st vertebra)", "count": 134, "pct": 4.8}, {"name": "Open reduction for fracture of femoral neck", "count": 117, "pct": 4.2}, {"name": "Partial joint replacement-cup or hip prosthesis or", "count": 115, "pct": 4.1}], "一般外科": [{"name": "Laparoscopic cholecystectomy", "count": 234, "pct": 16.6}, {"name": "Excision of soft tissue tumor, benign, large or d", "count": 214, "pct": 15.2}, {"name": "Excision of skin or subcutaneous tumor (Except face) within", "count": 128, "pct": 9.1}, {"name": "Laparoscopic appendectomy", "count": 123, "pct": 8.7}, {"name": "Excision of skin or subcutaneous tumor (Except face) 2 to 4c", "count": 48, "pct": 3.4}], "心臟血管外科": [{"name": "Thrombectomy, venous", "count": 207, "pct": 20.0}, {"name": "Permanent Catheter implantation through internal jugular vei", "count": 187, "pct": 18.0}, {"name": "P.T.A. (percutaneous transluminal angioplasty): simple", "count": 172, "pct": 16.6}, {"name": "Excision of muscle or deep tissue tumor, deep foreign body", "count": 97, "pct": 9.4}, {"name": "Repair and anastomosis of peripheral vessel", "count": 67, "pct": 6.5}], "耳鼻喉科": [{"name": "Septomeatal plasty,bilateral", "count": 191, "pct": 23.5}, {"name": "CO2 laser operation", "count": 95, "pct": 11.7}, {"name": "Myringotomy with ventilation tube inflation insertion Under", "count": 57, "pct": 7.0}, {"name": "(導航系統)Pansinusectomy", "count": 54, "pct": 6.6}, {"name": "Myringotomy under microscope or telescope", "count": 43, "pct": 5.3}], "整型外科": [{"name": "Regional fasciectomy", "count": 111, "pct": 15.4}, {"name": "Tenotomy or fasciotomy", "count": 58, "pct": 8.0}, {"name": "Skin graft for hand,perineum, and foot-5c㎡", "count": 42, "pct": 5.8}, {"name": "Excision of skin or subcutaneous tumor (Except face) within", "count": 33, "pct": 4.6}, {"name": "Tendon or ligament repair (complete disruption)", "count": 32, "pct": 4.4}], "婦產科": [{"name": "Hysteroscopic removal of foreign body or polyp", "count": 166, "pct": 27.3}, {"name": "Laparoscopic partial or complete adnexectomy - unilateral", "count": 64, "pct": 10.5}, {"name": "Cervicalconization", "count": 42, "pct": 6.9}, {"name": "Laparoscopic subtotal hysterectomy", "count": 36, "pct": 5.9}, {"name": "Cesarean section", "count": 30, "pct": 4.9}], "直腸外科": [{"name": "Hemorrhoidectomy, internal & external", "count": 117, "pct": 26.1}, {"name": "Anal fistulectomy or fistulotomy with hemorrhoide", "count": 89, "pct": 19.9}, {"name": "Laparoscopic low anterior resection of rectum", "count": 24, "pct": 5.4}, {"name": "EnterostomyIincludingColostomyJujunostomyPenterost", "count": 20, "pct": 4.5}, {"name": "Laparoscopic appendectomy", "count": 20, "pct": 4.5}], "乳房外科": [{"name": "超音波導引真空輔助連續乳房切片微創手術(小於3公分)_單側乳房", "count": 93, "pct": 21.1}, {"name": "Excision of breast tumor, unilateral", "count": 61, "pct": 13.9}, {"name": "Breast tumor excision after needle localigation", "count": 50, "pct": 11.4}, {"name": "Excision of soft tissue tumor, benign, large or d", "count": 37, "pct": 8.4}, {"name": "herapeutic catheter implantation — Port-A cathete", "count": 29, "pct": 6.6}], "神經外科": [{"name": "posterior spinal fusion, with spinal instrumentat≦6 motion", "count": 93, "pct": 23.1}, {"name": "Diskectomy,cervical", "count": 50, "pct": 12.4}, {"name": "Decompression of median or ulnar nerve at wrist-unilateral", "count": 41, "pct": 10.2}, {"name": "Diskectomy,lumbar", "count": 26, "pct": 6.5}, {"name": "V-P shunt", "count": 23, "pct": 5.7}], "胸腔外科": [{"name": "Thoracoscopic wedge or Partial resection of the Lung", "count": 93, "pct": 34.4}, {"name": "Thoracoscopic Decortication of Pleura", "count": 34, "pct": 12.6}, {"name": "Thoracoscopic segmentectomy of lung", "count": 19, "pct": 7.0}, {"name": "Thoracoscopic Lobectomy", "count": 16, "pct": 5.9}, {"name": "Fluoroscopy", "count": 15, "pct": 5.6}], "口腔外科(含牙醫部)": [{"name": "Excision of tumor mass of bone and joint", "count": 11, "pct": 14.5}, {"name": "Orthognathic surgery-Two jaw surgery or Le Fort Ⅲ Osteotomy", "count": 7, "pct": 9.2}, {"name": "Excision of soft tissue tumor, benign, large or d", "count": 4, "pct": 5.3}, {"name": "Excision of nasopalatinal cyst", "count": 3, "pct": 3.9}, {"name": "骨髓炎之死骨切除或蝶形術及擴創(包頭骨,顱,股,脊椎)", "count": 3, "pct": 3.9}], "小兒外科": [{"name": "Z-plasty", "count": 13, "pct": 20.3}, {"name": "Repair of inguinal hernia, without bowel resectio", "count": 12, "pct": 18.8}, {"name": "Correction of chordee", "count": 5, "pct": 7.8}, {"name": "Excision of skin or subcutaneous tumor (Except face) within", "count": 5, "pct": 7.8}, {"name": "Foreign body removal, genitalia", "count": 4, "pct": 6.2}], "麻醉科": [{"name": "Fluoroscopy", "count": 1, "pct": 100.0}]};
+var TOP5_OPS_115={"眼科": [{"name": "水晶體囊內(外)摘除及人工水晶體置入", "count": 848, "pct": 55.6}, {"name": "Intravitreal injection of an anti-VEGF agent", "count": 329, "pct": 21.6}, {"name": "Intravitreous injection", "count": 136, "pct": 8.9}, {"name": "玻璃體內注射抗新生血管藥物Avastin", "count": 99, "pct": 6.5}, {"name": "Microincision vitreoretinal surgery-Complicated", "count": 21, "pct": 1.4}], "骨科": [{"name": "Total knee replacement", "count": 115, "pct": 8.1}, {"name": "Open reduction for fracture of radius，ulna", "count": 115, "pct": 8.1}, {"name": "Percutaneous vertebroplasty (1st vertebra)", "count": 73, "pct": 5.2}, {"name": "Arthroscopic rotator cuff repair", "count": 64, "pct": 4.5}, {"name": "Partial joint replacement-cup or hip prosthesis or", "count": 64, "pct": 4.5}], "泌尿科": [{"name": "Cystoscopy + retrograde  ureteral catheterization", "count": 280, "pct": 20.3}, {"name": "Ureteroscopy & removal of ureteral stone,with SON", "count": 244, "pct": 17.7}, {"name": "Transrectal ultrasound guided prostatebiopsy", "count": 110, "pct": 8.0}, {"name": "Cystoscopy", "count": 71, "pct": 5.1}, {"name": "銩雷射攝護腺手術", "count": 67, "pct": 4.8}], "一般外科": [{"name": "Excision of soft tissue tumor, benign, large or d", "count": 123, "pct": 18.0}, {"name": "Laparoscopic cholecystectomy", "count": 112, "pct": 16.4}, {"name": "Laparoscopic appendectomy", "count": 67, "pct": 9.8}, {"name": "Excision of skin or subcutaneous tumor (Except face) within", "count": 58, "pct": 8.5}, {"name": "Excision of skin or subcutaneous tumor (Except face) 2 to 4c", "count": 24, "pct": 3.5}], "心臟血管外科": [{"name": "Thrombectomy, venous", "count": 106, "pct": 21.1}, {"name": "Permanent Catheter implantation through internal jugular vei", "count": 83, "pct": 16.5}, {"name": "P.T.A. (percutaneous transluminal angioplasty): simple", "count": 77, "pct": 15.3}, {"name": "Repair and anastomosis of peripheral vessel", "count": 43, "pct": 8.5}, {"name": "Excision of muscle or deep tissue tumor, deep foreign body", "count": 36, "pct": 7.2}], "耳鼻喉科": [{"name": "Septomeatal plasty,bilateral", "count": 87, "pct": 23.5}, {"name": "CO2 laser operation", "count": 45, "pct": 12.2}, {"name": "Myringotomy with ventilation tube inflation insertion Under", "count": 31, "pct": 8.4}, {"name": "Pansinusectomy", "count": 23, "pct": 6.2}, {"name": "Complicated laryngoscopy, operative including exci", "count": 19, "pct": 5.1}], "整型外科": [{"name": "Regional fasciectomy", "count": 55, "pct": 16.5}, {"name": "Tenotomy or fasciotomy", "count": 42, "pct": 12.6}, {"name": "Skin graft for hand,perineum, and foot-5c㎡", "count": 24, "pct": 7.2}, {"name": "V-Y advancement flap (hand)", "count": 14, "pct": 4.2}, {"name": "Excision of facial skin and subcutaneous tumor-- 1", "count": 14, "pct": 4.2}], "婦產科": [{"name": "Hysteroscopic removal of foreign body or polyp", "count": 105, "pct": 33.5}, {"name": "Laparoscopic partial or complete adnexectomy - unilateral", "count": 29, "pct": 9.3}, {"name": "Hysteroscopic resection of uterine septum or hysteroscopic m", "count": 22, "pct": 7.0}, {"name": "Vaginal perineal urethral suspension(VPUS)", "count": 21, "pct": 6.7}, {"name": "Cervicalconization", "count": 18, "pct": 5.8}], "直腸外科": [{"name": "Hemorrhoidectomy, internal & external", "count": 56, "pct": 23.2}, {"name": "Anal fistulectomy or fistulotomy with hemorrhoide", "count": 38, "pct": 15.8}, {"name": "herapeutic catheter implantation — Port-A cathete", "count": 17, "pct": 7.1}, {"name": "EnterostomyIincludingColostomyJujunostomyPenterost", "count": 13, "pct": 5.4}, {"name": "Excision, sacrococcygeal tumor, benign", "count": 11, "pct": 4.6}], "神經外科": [{"name": "posterior spinal fusion, with spinal instrumentat≦6 motion", "count": 51, "pct": 23.2}, {"name": "Diskectomy,cervical", "count": 26, "pct": 11.8}, {"name": "Decompression of median or ulnar nerve at wrist-unilateral", "count": 24, "pct": 10.9}, {"name": "Diskectomy,lumbar", "count": 16, "pct": 7.3}, {"name": "Removal of chronic subdural hematoma", "count": 12, "pct": 5.5}], "乳房外科": [{"name": "超音波導引真空輔助連續乳房切片微創手術(小於3公分)_單側乳房", "count": 47, "pct": 22.2}, {"name": "Excision of soft tissue tumor, benign, large or d", "count": 29, "pct": 13.7}, {"name": "Excision of breast tumor, unilateral", "count": 26, "pct": 12.3}, {"name": "Breast tumor excision after needle localigation", "count": 21, "pct": 9.9}, {"name": "herapeutic catheter implantation — Port-A cathete", "count": 11, "pct": 5.2}], "胸腔外科": [{"name": "Thoracoscopic wedge or Partial resection of the Lung", "count": 50, "pct": 34.2}, {"name": "Thoracoscopic Decortication of Pleura", "count": 29, "pct": 19.9}, {"name": "herapeutic catheter implantation — Port-A cathete", "count": 12, "pct": 8.2}, {"name": "Correction for sternal or rib fracture open reduc", "count": 12, "pct": 8.2}, {"name": "Fluoroscopy", "count": 9, "pct": 6.2}], "口腔外科(含牙醫部)": [{"name": "Excision of tumor mass of bone and joint", "count": 6, "pct": 17.6}, {"name": "Wide excision - soft tissue tumor, malignant", "count": 3, "pct": 8.8}, {"name": "Orthognathic surgery-Two jaw surgery or Le Fort Ⅲ Osteotomy", "count": 3, "pct": 8.8}, {"name": "Excision of soft tissue tumor, benign, large or d", "count": 2, "pct": 5.9}, {"name": "植牙手術", "count": 2, "pct": 5.9}], "小兒外科": [{"name": "Z-plasty", "count": 11, "pct": 36.7}, {"name": "Correction of chordee", "count": 10, "pct": 33.3}, {"name": "Orchiopexy,unilateral", "count": 2, "pct": 6.7}, {"name": "Repair of inguinal hernia, without bowel resectio", "count": 2, "pct": 6.7}, {"name": "Excision of abdominal wall tumor,benign", "count": 1, "pct": 3.3}], "麻醉科": []};
+
 const BASE_114 = {
   year:114,label:'114年',
   kpi:{total:15176,avg_daily:56.2,ot_count:451,
@@ -798,8 +807,8 @@ var NIGHT_ANES_115={"一般外科": {"全麻": 38, "局麻": 0, "合計": 38}, "
 function loadDB(){
   try{ const s=localStorage.getItem('or_db_v1'); if(s) DB=JSON.parse(s); }catch(e){}
   // 資料版本戳：若內建資料已更新（XLS重算），強制清除舊的115年 localStorage 資料
-  const DATA_115_STAMP='20260711-v2';
-  const DATA_114_STAMP='20260711-v2';
+  const DATA_115_STAMP='20260711-top5';
+  const DATA_114_STAMP='20260711-top5';
   const storedStamp=localStorage.getItem('or_data115_stamp')||'';
   const storedStamp114=localStorage.getItem('or_data114_stamp')||'';
   if(storedStamp!==DATA_115_STAMP || storedStamp114!==DATA_114_STAMP){
@@ -993,6 +1002,7 @@ function renderCurrentPage(){
   else if(pg==='emerg') renderEmerg(d);
   else if(pg==='davinci') renderDavinci(d);
   else if(pg==='cvs') renderCvs(d);
+  else if(pg==='top5ops') renderTop5Ops(d);
   else if(pg==='compare') renderCompare();
   else if(pg==='edit') renderEdit();
 }
@@ -1600,6 +1610,66 @@ function renderCvs(d){
       {label:'Valve',data:c.valve_monthly,borderColor:COLORS.teal,tension:0.2,pointRadius:4,pointBackgroundColor:COLORS.teal,borderWidth:2,borderDash:[8,3]},
     ]
   },{...baseOpts(),scales:{x:{...baseOpts().scales.x,ticks:{...baseOpts().scales.x.ticks,autoSkip:false,maxRotation:0}},y:{...baseOpts().scales.y,beginAtZero:true,max:Math.max(...c.cabg_monthly,...c.ecmo_monthly,...c.valve_monthly)+1,ticks:{...baseOpts().scales.y.ticks,stepSize:1}}},plugins:{legend:{display:true,position:'top',labels:{color:TC,font:{size:12},boxWidth:12}}}});
+}
+
+
+// ════════════════════════════════════════════════
+// TOP5 OPS
+// ════════════════════════════════════════════════
+function renderTop5Ops(d){
+  const yr = currentYear;
+  const topData = yr===114 ? TOP5_OPS_114 : TOP5_OPS_115;
+  const depts = Object.keys(topData);
+
+  // KPI 卡片
+  const totalOps = d.dept.reduce((s,x)=>s+x.count,0);
+  document.getElementById('kpi-top5ops').innerHTML =
+    kpiCard('科別數',depts.length,'個科別',COLORS.blue) +
+    kpiCard('手術總量',totalOps.toLocaleString(),'件',COLORS.teal) +
+    kpiCard('最大量科別',d.dept[0]?.name||'—',d.dept[0]?.count+'件',COLORS.amber);
+
+  const content = document.getElementById('top5ops-content');
+  if(!content) return;
+
+  // 每科一張卡片，2欄排列
+  let html = '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(420px,1fr));gap:16px;margin-top:8px">';
+
+  depts.forEach(dept=>{
+    const tops = topData[dept];
+    const deptInfo = d.dept.find(x=>x.name===dept)||{count:0};
+    const deptTotal = deptInfo.count;
+    const maxCnt = tops[0]?.count||1;
+
+    html += `<div class="card" style="padding:16px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding-bottom:10px;border-bottom:2px solid var(--blue-l)">
+        <span style="font-size:15px;font-weight:700;color:var(--text)">${dept}</span>
+        <span style="font-size:12px;color:var(--text3);background:var(--bg);padding:3px 8px;border-radius:12px">總計 ${deptTotal.toLocaleString()} 件</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px">`;
+
+    tops.forEach((op,i)=>{
+      const barW = Math.round(op.count/maxCnt*100);
+      const medals = ['🥇','🥈','🥉','4️⃣','5️⃣'];
+      const colors = ['#1a56db','#0891b2','#059669','#7c3aed','#b45309'];
+      html += `<div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+          <div style="display:flex;align-items:center;gap:6px;flex:1;min-width:0">
+            <span style="font-size:14px;flex-shrink:0">${medals[i]}</span>
+            <span style="font-size:12px;color:var(--text);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${op.name}">${op.name}</span>
+          </div>
+          <span style="font-size:12px;font-weight:700;color:${colors[i]};margin-left:8px;flex-shrink:0">${op.count} 件 (${op.pct}%)</span>
+        </div>
+        <div style="height:6px;background:var(--bg);border-radius:3px;overflow:hidden">
+          <div style="height:100%;width:${barW}%;background:${colors[i]};border-radius:3px;transition:width .4s"></div>
+        </div>
+      </div>`;
+    });
+
+    html += '</div></div>';
+  });
+
+  html += '</div>';
+  content.innerHTML = html;
 }
 
 // ════════════════════════════════════════════════
