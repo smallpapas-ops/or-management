@@ -2109,7 +2109,7 @@ function renderCompare(){
         {label:yb+'年',data:rB,backgroundColor:'rgba(245,158,11,0.7)',borderColor:COLORS.amber,borderWidth:1,borderRadius:4},
         ...(rC?[{label:yc+'年',data:rC,backgroundColor:'rgba(16,185,129,0.7)',borderColor:COLORS.teal,borderWidth:1,borderRadius:4}]:[]),
       ]
-    },{...baseOpts(),scales:{x:{...baseOpts().scales.x,ticks:{...baseOpts().scales.x.ticks,autoSkip:false,maxRotation:0}},y:{...baseOpts().scales.y,beginAtZero:false,min:Math.floor(Math.min(...rA,...rB)*(rC?Math.min(...rC):1)*0.9/100)*100}},plugins:{legend:{display:true,position:'top',labels:{color:TC,font:{size:12},boxWidth:12}},tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${ctx.raw.toLocaleString()}件`}}}});
+    },{...baseOpts(),scales:{x:{...baseOpts().scales.x,ticks:{...baseOpts().scales.x.ticks,autoSkip:false,maxRotation:0}},y:{...baseOpts().scales.y,beginAtZero:false,min:Math.floor(Math.min(...rA,...rB)*(rC?Math.min(...rC):1)*0.9/100)*100}},_labels:true,_fmt:'val',plugins:{legend:{display:true,position:'top',labels:{color:TC,font:{size:12},boxWidth:12}},tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${ctx.raw.toLocaleString()}件`}}}});
 
     // 季別長條圖
     const Q_MONS=[[0,1,2],[3,4,5],[6,7,8],[9,10,11]];
@@ -2124,7 +2124,7 @@ function renderCompare(){
         {label:yb+'年',data:qB,backgroundColor:'rgba(245,158,11,0.75)',borderColor:COLORS.amber,borderWidth:1,borderRadius:6},
         ...(qC?[{label:yc+'年',data:qC,backgroundColor:'rgba(16,185,129,0.75)',borderColor:COLORS.teal,borderWidth:1,borderRadius:6}]:[]),
       ]
-    },{...baseOpts(),scales:{x:{...baseOpts().scales.x,ticks:{...baseOpts().scales.x.ticks,autoSkip:false,maxRotation:0}},y:{...baseOpts().scales.y,beginAtZero:false,min:Math.floor(Math.min(...qA,...qB)*(qC?Math.min(...qC):1)*0.85/100)*100,ticks:{...baseOpts().scales.y.ticks,callback:v=>v.toLocaleString()}}},plugins:{legend:{display:true,position:'top',labels:{color:TC,font:{size:12},boxWidth:12}},tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${ctx.raw.toLocaleString()}件`}}}});
+    },{...baseOpts(),scales:{x:{...baseOpts().scales.x,ticks:{...baseOpts().scales.x.ticks,autoSkip:false,maxRotation:0}},y:{...baseOpts().scales.y,beginAtZero:false,min:Math.floor(Math.min(...qA,...qB)*(qC?Math.min(...qC):1)*0.85/100)*100,ticks:{...baseOpts().scales.y.ticks,callback:v=>v.toLocaleString()}}},_labels:true,_fmt:'val',plugins:{legend:{display:true,position:'top',labels:{color:TC,font:{size:12},boxWidth:12}},tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${ctx.raw.toLocaleString()}件`}}}});
 
     const eTypes=['急診手術','緊急手術','危急手術'];
     const eA=[da.kpi.emerg,da.kpi.urgent,da.kpi.crit];
@@ -2135,7 +2135,7 @@ function renderCompare(){
         {label:ya+'年',data:eA,backgroundColor:COLORS.blue,borderRadius:3},
         {label:yb+'年',data:eB,backgroundColor:COLORS.amber,borderRadius:3},
       ]
-    },{...baseOpts(),plugins:{legend:{display:true,position:'top',labels:{color:TC,font:{size:12},boxWidth:12}}},scales:{x:{...baseOpts().scales.x},y:{...baseOpts().scales.y,beginAtZero:true}}});
+    },{...baseOpts(),_labels:true,_fmt:'val',plugins:{legend:{display:true,position:'top',labels:{color:TC,font:{size:12},boxWidth:12}}},scales:{x:{...baseOpts().scales.x},y:{...baseOpts().scales.y,beginAtZero:true}}});
 
     const top8=da.dept.slice(0,8);
     const top8b=top8.map(d2=>{const f=db.dept.find(x=>x.name===d2.name);return f?f.count:0;});
@@ -2145,7 +2145,7 @@ function renderCompare(){
         {label:ya+'年',data:top8.map(x=>x.count),backgroundColor:COLORS.blue,borderRadius:3},
         {label:yb+'年',data:top8b,backgroundColor:COLORS.amber,borderRadius:3},
       ]
-    },{...baseOpts(),plugins:{legend:{display:true,position:'top',labels:{color:TC,font:{size:12},boxWidth:12}}},scales:{x:{...baseOpts().scales.x,ticks:{...baseOpts().scales.x.ticks,font:{size:10}}},y:{...baseOpts().scales.y,beginAtZero:true}}});
+    },{_labels:true,_fmt:'val',...baseOpts(),plugins:{legend:{display:true,position:'top',labels:{color:TC,font:{size:12},boxWidth:12}}},scales:{x:{...baseOpts().scales.x,ticks:{...baseOpts().scales.x.ticks,font:{size:10}}},y:{...baseOpts().scales.y,beginAtZero:true}}});
   },50);
 }
 
