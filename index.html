@@ -372,10 +372,11 @@ td input:focus{outline:none;border-color:var(--blue-m)}
       </div>
     </div>
     <!-- 頁籤導覽 -->
-    <div style="display:flex;gap:8px;margin-bottom:12px;border-bottom:2px solid var(--border);padding-bottom:0">
-      <button id="tab-ontime-std" onclick="switchTimeTab('std')" style="padding:8px 18px;border:none;border-radius:8px 8px 0 0;background:var(--blue);color:#fff;font-weight:600;cursor:pointer;font-size:13px">📋 標準（7:25–8:10）</button>
-      <button id="tab-ontime-new" onclick="switchTimeTab('new')" style="padding:8px 18px;border:none;border-radius:8px 8px 0 0;background:var(--bg2);color:var(--text2);font-weight:500;cursor:pointer;font-size:13px">🆕 寬鬆（7:25–8:15）</button>
-      <button id="tab-ontime-cmp" onclick="switchTimeTab('cmp')" style="padding:8px 18px;border:none;border-radius:8px 8px 0 0;background:var(--bg2);color:var(--text2);font-weight:500;cursor:pointer;font-size:13px">📊 兩版對比</button>
+    <div style="display:flex;gap:6px;margin-bottom:12px;border-bottom:2px solid var(--border);padding-bottom:0;flex-wrap:wrap">
+      <button id="tab-ontime-std" onclick="switchTimeTab('std')" style="padding:8px 14px;border:none;border-radius:8px 8px 0 0;background:var(--blue);color:#fff;font-weight:600;cursor:pointer;font-size:12px">📋 標準（≤8:10）</button>
+      <button id="tab-ontime-new" onclick="switchTimeTab('new')" style="padding:8px 14px;border:none;border-radius:8px 8px 0 0;background:var(--bg2);color:var(--text2);font-weight:500;cursor:pointer;font-size:12px">🔵 放寬（≤8:15）</button>
+      <button id="tab-ontime-new2" onclick="switchTimeTab('new2')" style="padding:8px 14px;border:none;border-radius:8px 8px 0 0;background:var(--bg2);color:var(--text2);font-weight:500;cursor:pointer;font-size:12px">🟢 更寬（≤8:20）</button>
+      <button id="tab-ontime-cmp" onclick="switchTimeTab('cmp')" style="padding:8px 14px;border:none;border-radius:8px 8px 0 0;background:var(--bg2);color:var(--text2);font-weight:500;cursor:pointer;font-size:12px">📊 三版對比</button>
     </div>
 
     <!-- 標準頁籤內容 -->
@@ -434,23 +435,55 @@ td input:focus{outline:none;border-color:var(--blue-m)}
       </div>
     </div>
 
+    <!-- 更寬版（7:25–8:20）頁籤 -->
+    <div id="tab-content-new2" style="display:none">
+      <div class="kpi-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:12px">
+        <div class="kpi" style="background:linear-gradient(135deg,#f0fdf4,#dcfce7)">
+          <div class="kpi-label">整體準時率（≤8:20）</div>
+          <div class="kpi-value" style="color:var(--green)" id="kpi-new2-overall">—</div>
+          <div class="kpi-sub">首台進手術室 07:25–08:20</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">vs 標準版差異</div>
+          <div class="kpi-value" style="color:var(--teal)" id="kpi-new2-diff">—</div>
+          <div class="kpi-sub">≤8:20 – 標準（百分點）</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">差異最大房間</div>
+          <div class="kpi-value" style="color:var(--amber)" id="kpi-new2-maxroom">—</div>
+          <div class="kpi-sub" id="kpi-new2-maxroom-sub">最多可提升</div>
+        </div>
+      </div>
+      <div class="card mb16">
+        <div class="card-header"><span class="card-title">各月 8AM 準時率（7:25–8:20）</span><span style="font-size:11px;color:var(--text3);margin-left:8px">扣除OR01、OR8A、OR12、DR</span></div>
+        <div class="chart-wrap" style="height:200px"><canvas id="c-ontime-new2-mon"></canvas></div>
+      </div>
+      <div class="card mb16">
+        <div class="card-header"><span class="card-title">各房間準時率（7:25–8:20）</span></div>
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>房間</th><th>準時率</th><th>達標件/總件</th><th>狀態</th></tr></thead>
+          <tbody id="ontime-new2-room-tbody"></tbody>
+        </table></div>
+      </div>
+    </div>
+
     <!-- 對比頁籤 -->
     <div id="tab-content-cmp" style="display:none">
       <div class="card mb16">
-        <div class="card-header"><span class="card-title">標準 vs 寬鬆 — 月別準時率對比</span><span style="font-size:11px;color:var(--text3);margin-left:8px">🟣 7:25–8:10　🟢 7:25–8:15</span></div>
-        <div class="chart-wrap" style="height:220px"><canvas id="c-ontime-cmp-mon"></canvas></div>
+        <div class="card-header"><span class="card-title">三版月別準時率對比</span><span style="font-size:11px;color:var(--text3);margin-left:8px">🟣 ≤8:10　🔵 ≤8:15　🟢 ≤8:20</span></div>
+        <div class="chart-wrap" style="height:240px"><canvas id="c-ontime-cmp-mon"></canvas></div>
       </div>
       <div class="card mb16">
-        <div class="card-header"><span class="card-title">各房間準時率對比（6–9月合計）</span></div>
+        <div class="card-header"><span class="card-title">各房間準時率對比（1–9月合計）</span></div>
         <div class="tbl-wrap"><table>
           <thead>
             <tr>
               <th>房間</th>
-              <th style="color:var(--purple)">標準<br><small style="font-weight:400">7:25–8:10</small></th>
-              <th style="color:var(--green)">寬鬆<br><small style="font-weight:400">7:25–8:15</small></th>
-              <th>差異</th>
-              <th>達標件數（標準）</th>
-              <th>達標件數（寬鬆）</th>
+              <th style="color:var(--purple)">≤8:10<br><small style="font-weight:400">標準</small></th>
+              <th style="color:#3b82f6">≤8:15<br><small style="font-weight:400">放寬</small></th>
+              <th style="color:var(--green)">≤8:20<br><small style="font-weight:400">更寬</small></th>
+              <th>8:10→8:20</th>
+              <th>件數（標準）</th>
             </tr>
           </thead>
           <tbody id="ontime-cmp-room-tbody"></tbody>
@@ -901,7 +934,7 @@ var NIGHT_ANES_115={"全身麻醉":[29,30,41,38,24,23,23,22,18,0,0,0],"局部麻
 function loadDB(){
   try{ const s=localStorage.getItem('or_db_v1'); if(s) DB=JSON.parse(s); }catch(e){}
   // 資料版本戳：若內建資料已更新（XLS重算），強制清除舊的115年 localStorage 資料
-  const DATA_115_STAMP='20261003-sep-achv';
+  const DATA_115_STAMP='20261003-1to9-cmp';
   const DATA_114_STAMP='20260903-cvsstaff';
   const storedStamp=localStorage.getItem('or_data115_stamp')||'';
   const storedStamp114=localStorage.getItem('or_data114_stamp')||'';
@@ -1526,33 +1559,38 @@ function renderTime(d){
   // 初始化頁籤（預設顯示標準）
   switchTimeTab('std');
   renderOntimeNew(d);
+  renderOntimeNew2(d);
   renderOntimeCmp(d);
 }
 
-// 8AM準時率對比靜態資料（115年6-9月，XLS計算）
+// 8AM準時率對比靜態資料（115年1-9月，XLS計算）
 const ONTIME_CMP_115 = {
-  // 各月 標準(7:25-8:10) vs 寬鬆(7:25-8:15)
-  monthly_std: [76.4, 73.4, 79.2, 76.0, 79.1, 77.6, 81.5, 75.6, 75.6, 0, 0, 0],
-  monthly_new: [76.4, 73.4, 79.2, 76.0, 79.1, 90.2, 90.1, 86.9, 84.0, 0, 0, 0],
-  // 各房間合計（6-9月，XLS計算）
+  // 各月 標準(7:25-8:10) vs 放寬(7:25-8:15) vs 更寬(7:25-8:20)（1-9月XLS計算）
+  monthly_std:  [70.8, 73.5, 75.7, 74.0, 73.7, 77.6, 81.5, 75.6, 75.6, 0, 0, 0],
+  monthly_new:  [77.3, 84.6, 80.7, 81.7, 79.4, 83.6, 85.1, 80.8, 80.0, 0, 0, 0],
+  monthly_new2: [80.1, 87.7, 83.0, 84.9, 82.8, 84.6, 86.0, 84.0, 82.4, 0, 0, 0],
+  // 各月案件數
+  monthly_total: [216, 162, 218, 219, 209, 214, 222, 213, 205, 0, 0, 0],
+  // 各房間合計（1-9月，XLS計算）
   rooms: [
-    {room:'OR02', std_rate:89.9, std_ok:80, std_tot:89, new_rate:89.9, new_ok:80, new_tot:89},
-    {room:'OR03', std_rate:93.2, std_ok:82, std_tot:88, new_rate:95.5, new_ok:84, new_tot:88},
-    {room:'OR05', std_rate:86.8, std_ok:59, std_tot:68, new_rate:91.2, new_ok:62, new_tot:68},
-    {room:'OR06', std_rate:54.8, std_ok:17, std_tot:31, new_rate:58.1, new_ok:18, new_tot:31},
-    {room:'OR07', std_rate:67.4, std_ok:62, std_tot:92, new_rate:71.7, new_ok:66, new_tot:92},
-    {room:'OR08', std_rate:82.9, std_ok:68, std_tot:82, new_rate:89.0, new_ok:73, new_tot:82},
-    {room:'OR09', std_rate:90.9, std_ok:80, std_tot:88, new_rate:95.5, new_ok:84, new_tot:88},
-    {room:'OR11', std_rate:90.2, std_ok:74, std_tot:82, new_rate:97.6, new_ok:80, new_tot:82},
-    {room:'OR13', std_rate:86.2, std_ok:69, std_tot:80, new_rate:92.5, new_ok:74, new_tot:80},
+    {room:'OR02', std_rate:90.8,std_ok:177,std_tot:195, new_rate:91.8,new_ok:179,new_tot:195, new2_rate:92.8,new2_ok:181,new2_tot:195},
+    {room:'OR03', std_rate:89.7,std_ok:165,std_tot:184, new_rate:92.9,new_ok:171,new_tot:184, new2_rate:94.6,new2_ok:174,new2_tot:184},
+    {room:'OR05', std_rate:82.8,std_ok:125,std_tot:151, new_rate:86.1,new_ok:130,new_tot:151, new2_rate:86.1,new2_ok:130,new2_tot:151},
+    {room:'OR06', std_rate:60.0,std_ok:45,std_tot:75,  new_rate:62.7,new_ok:47,new_tot:75,  new2_rate:66.7,new2_ok:50,new2_tot:75},
+    {room:'OR07', std_rate:67.6,std_ok:142,std_tot:210, new_rate:72.9,new_ok:153,new_tot:210, new2_rate:74.8,new2_ok:157,new2_tot:210},
+    {room:'OR08', std_rate:85.9,std_ok:158,std_tot:184, new_rate:90.8,new_ok:167,new_tot:184, new2_rate:92.9,new2_ok:171,new2_tot:184},
+    {room:'OR09', std_rate:89.4,std_ok:168,std_tot:188, new_rate:95.7,new_ok:180,new_tot:188, new2_rate:96.3,new2_ok:181,new2_tot:188},
+    {room:'OR11', std_rate:92.7,std_ok:164,std_tot:177, new_rate:97.2,new_ok:172,new_tot:177, new2_rate:97.2,new2_ok:172,new2_tot:177},
+    {room:'OR13', std_rate:84.1,std_ok:143,std_tot:170, new_rate:92.4,new_ok:157,new_tot:170, new2_rate:94.1,new2_ok:160,new2_tot:170},
   ],
-  // 6-9月整體
-  overall_std: {6:84.7, 7:87.0, 8:83.1, 9:78.9},
-  overall_new: {6:90.2, 7:90.1, 8:86.9, 9:84.0}
+  // 1-9月整體月別
+  overall_std:  {1:70.8, 2:73.5, 3:75.7, 4:74.0, 5:73.7, 6:77.6, 7:81.5, 8:75.6, 9:75.6},
+  overall_new:  {1:77.3, 2:84.6, 3:80.7, 4:81.7, 5:79.4, 6:83.6, 7:85.1, 8:80.8, 9:80.0},
+  overall_new2: {1:80.1, 2:87.7, 3:83.0, 4:84.9, 5:82.8, 6:84.6, 7:86.0, 8:84.0, 9:82.4}
 };
 
 function switchTimeTab(tab){
-  ['std','new','cmp'].forEach(t=>{
+  ['std','new','new2','cmp'].forEach(t=>{
     const btn=document.getElementById('tab-ontime-'+t);
     const ct=document.getElementById('tab-content-'+t);
     if(!btn||!ct) return;
@@ -1567,7 +1605,7 @@ function switchTimeTab(tab){
 function renderOntimeNew(d){
   const cmp=ONTIME_CMP_115;
   const yr=currentYear;
-  // 計算整體寬鬆準時率（6-9月平均）
+  // 計算整體寬鬆準時率（1-9月平均）
   const newMonthly=cmp.monthly_new.filter(v=>v>0);
   const stdMonthly=cmp.monthly_std.filter(v=>v>0);
   const newOverall=newMonthly.length>0?Math.round(newMonthly.reduce((a,b)=>a+b)/newMonthly.length*10)/10:0;
@@ -1612,36 +1650,78 @@ function renderOntimeNew(d){
   }
 }
 
+function renderOntimeNew2(d){
+  const cmp=ONTIME_CMP_115;
+  const new2Monthly=cmp.monthly_new2.filter(v=>v>0);
+  const stdMonthly=cmp.monthly_std.filter(v=>v>0);
+  const new2Overall=new2Monthly.length>0?Math.round(new2Monthly.reduce((a,b)=>a+b)/new2Monthly.length*10)/10:0;
+  const stdOverall=stdMonthly.length>0?Math.round(stdMonthly.reduce((a,b)=>a+b)/stdMonthly.length*10)/10:0;
+  const diff=Math.round((new2Overall-stdOverall)*10)/10;
+
+  const el=v=>document.getElementById(v);
+  if(el('kpi-new2-overall')) el('kpi-new2-overall').textContent=new2Overall+'%';
+  if(el('kpi-new2-diff')) el('kpi-new2-diff').textContent=(diff>=0?'+':'')+diff+'%';
+
+  const maxRoom=cmp.rooms.slice().sort((a,b)=>(b.new2_rate-b.std_rate)-(a.new2_rate-a.std_rate))[0];
+  if(maxRoom){
+    if(el('kpi-new2-maxroom')) el('kpi-new2-maxroom').textContent=maxRoom.room;
+    if(el('kpi-new2-maxroom-sub')) el('kpi-new2-maxroom-sub').textContent=`+${Math.round((maxRoom.new2_rate-maxRoom.std_rate)*10)/10}% 可提升`;
+  }
+
+  const hasM=cmp.monthly_new2.map((v,i)=>v>0?i:-1).filter(i=>i>=0);
+  if(hasM.length>0){
+    mkChart('c-ontime-new2-mon','line',{
+      labels:hasM.map(i=>MN[i]),
+      datasets:[{data:hasM.map(i=>cmp.monthly_new2[i]),borderColor:'#10b981',backgroundColor:'rgba(16,185,129,0.08)',fill:true,tension:0.35,pointRadius:4,pointBackgroundColor:'#10b981'}]
+    },{...baseOpts(),scales:{x:{...baseOpts().scales.x,ticks:{...baseOpts().scales.x.ticks,autoSkip:false,maxRotation:0}},y:{...baseOpts().scales.y,min:60,max:100,ticks:{...baseOpts().scales.y.ticks,callback:v=>v+'%'}}},plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>ctx.raw.toFixed(1)+'%'}}}});
+  }
+
+  const tbody=document.getElementById('ontime-new2-room-tbody');
+  if(tbody){
+    tbody.innerHTML=cmp.rooms.map(r=>{
+      const rn=r.new2_rate;
+      const color=rn>=90?'color:var(--green)':rn>=80?'color:var(--teal)':rn>=65?'color:var(--amber)':'color:var(--red-m)';
+      const tag=rn>=90?'✅ 優':rn>=80?'🟢 良':rn>=65?'🟡 普':'🔴 差';
+      return `<tr>
+        <td style="font-weight:600">${r.room}</td>
+        <td style="${color};font-weight:600;font-size:15px">${rn.toFixed(1)}%</td>
+        <td style="color:var(--text3);font-size:12px">${r.new2_ok}/${r.new2_tot}</td>
+        <td style="font-size:12px">${tag}</td>
+      </tr>`;
+    }).join('');
+  }
+}
+
 function renderOntimeCmp(d){
   const cmp=ONTIME_CMP_115;
-  const hasM=cmp.monthly_std.map((v,i)=>(v>0||cmp.monthly_new[i]>0)?i:-1).filter(i=>i>=0);
+  const hasM=cmp.monthly_std.map((v,i)=>(v>0||cmp.monthly_new[i]>0||cmp.monthly_new2[i]>0)?i:-1).filter(i=>i>=0);
 
-  // 雙線月別圖
+  // 三線月別圖
   if(hasM.length>0){
     mkChart('c-ontime-cmp-mon','line',{
       labels:hasM.map(i=>MN[i]),
       datasets:[
-        {label:'標準 7:25–8:10',data:hasM.map(i=>cmp.monthly_std[i]||null),borderColor:COLORS.purple,backgroundColor:'rgba(139,92,246,0.06)',fill:false,tension:0.35,pointRadius:4,pointBackgroundColor:COLORS.purple},
-        {label:'寬鬆 7:25–8:15',data:hasM.map(i=>cmp.monthly_new[i]||null),borderColor:COLORS.green,backgroundColor:'rgba(16,185,129,0.06)',fill:false,tension:0.35,pointRadius:4,pointBackgroundColor:COLORS.green,borderDash:[4,3]}
+        {label:'標準 ≤8:10',data:hasM.map(i=>cmp.monthly_std[i]||null),borderColor:COLORS.purple,fill:false,tension:0.35,pointRadius:4,pointBackgroundColor:COLORS.purple,borderWidth:2},
+        {label:'放寬 ≤8:15',data:hasM.map(i=>cmp.monthly_new[i]||null),borderColor:'#3b82f6',fill:false,tension:0.35,pointRadius:4,pointBackgroundColor:'#3b82f6',borderDash:[5,3],borderWidth:2},
+        {label:'更寬 ≤8:20',data:hasM.map(i=>cmp.monthly_new2[i]||null),borderColor:COLORS.green,fill:false,tension:0.35,pointRadius:4,pointBackgroundColor:COLORS.green,borderDash:[2,2],borderWidth:2}
       ]
-    },{...baseOpts(),scales:{x:{...baseOpts().scales.x,ticks:{...baseOpts().scales.x.ticks,autoSkip:false,maxRotation:0}},y:{...baseOpts().scales.y,min:60,max:100,ticks:{...baseOpts().scales.y.ticks,callback:v=>v+'%'}}},plugins:{legend:{display:true,labels:{color:TC,font:{size:11}}},tooltip:{callbacks:{label:ctx=>ctx.dataset.label+': '+ctx.raw.toFixed(1)+'%'}}}});
+    },{...baseOpts(),scales:{x:{...baseOpts().scales.x,ticks:{...baseOpts().scales.x.ticks,autoSkip:false,maxRotation:0}},y:{...baseOpts().scales.y,min:60,max:100,ticks:{...baseOpts().scales.y.ticks,callback:v=>v+'%'}}},plugins:{legend:{display:true,labels:{color:TC,font:{size:11},boxWidth:20}},tooltip:{callbacks:{label:ctx=>ctx.dataset.label+': '+ctx.raw.toFixed(1)+'%'}}}});
   }
 
-  // 各房間對比表格
+  // 各房間三版對比表格
   const tbody=document.getElementById('ontime-cmp-room-tbody');
   if(tbody){
     tbody.innerHTML=cmp.rooms.map(r=>{
-      const diff=Math.round((r.new_rate-r.std_rate)*10)/10;
-      const diffColor=diff>5?'color:var(--green);font-weight:700':diff>0?'color:var(--teal)':'color:var(--text3)';
-      const stdColor=r.std_rate>=85?'color:var(--green)':r.std_rate>=70?'color:var(--teal)':r.std_rate>=55?'color:var(--amber)':'color:var(--red-m)';
-      const newColor=r.new_rate>=90?'color:var(--green)':r.new_rate>=75?'color:var(--teal)':r.new_rate>=60?'color:var(--amber)':'color:var(--red-m)';
+      const diff=Math.round((r.new2_rate-r.std_rate)*10)/10;
+      const diffColor=diff>=8?'color:var(--green);font-weight:700':diff>=4?'color:var(--teal)':diff>0?'color:var(--text2)':'color:var(--text3)';
+      const c=v=>v>=90?'color:var(--green)':v>=80?'color:var(--teal)':v>=65?'color:var(--amber)':'color:var(--red-m)';
       return `<tr>
         <td style="font-weight:600">${r.room}</td>
-        <td style="${stdColor};font-weight:600">${r.std_rate.toFixed(1)}%</td>
-        <td style="${newColor};font-weight:600">${r.new_rate.toFixed(1)}%</td>
+        <td style="${c(r.std_rate)};font-weight:600">${r.std_rate.toFixed(1)}%</td>
+        <td style="${c(r.new_rate)};font-weight:600">${r.new_rate.toFixed(1)}%</td>
+        <td style="${c(r.new2_rate)};font-weight:600">${r.new2_rate.toFixed(1)}%</td>
         <td style="${diffColor}">+${diff}%</td>
         <td style="color:var(--text3);font-size:12px">${r.std_ok}/${r.std_tot}</td>
-        <td style="color:var(--text3);font-size:12px">${r.new_ok}/${r.new_tot}</td>
       </tr>`;
     }).join('');
   }
@@ -1649,22 +1729,44 @@ function renderOntimeCmp(d){
   // 關鍵發現
   const insight=document.getElementById('ontime-cmp-insight');
   if(insight){
-    const topRoom=cmp.rooms.slice().sort((a,b)=>(b.new_rate-b.std_rate)-(a.new_rate-a.std_rate))[0];
-    const newAvg=Math.round(cmp.monthly_new.filter(v=>v>0).reduce((a,b)=>a+b)/cmp.monthly_new.filter(v=>v>0).length*10)/10;
+    const topRoom=cmp.rooms.slice().sort((a,b)=>(b.new2_rate-b.std_rate)-(a.new2_rate-a.std_rate))[0];
     const stdAvg=Math.round(cmp.monthly_std.filter(v=>v>0).reduce((a,b)=>a+b)/cmp.monthly_std.filter(v=>v>0).length*10)/10;
+    const newAvg=Math.round(cmp.monthly_new.filter(v=>v>0).reduce((a,b)=>a+b)/cmp.monthly_new.filter(v=>v>0).length*10)/10;
+    const new2Avg=Math.round(cmp.monthly_new2.filter(v=>v>0).reduce((a,b)=>a+b)/cmp.monthly_new2.filter(v=>v>0).length*10)/10;
     insight.innerHTML=`
       <div style="display:grid;gap:10px">
-        <div style="padding:12px;background:var(--blue-m,rgba(37,99,235,0.08));border-radius:8px;border-left:4px solid var(--blue)">
-          📈 <strong>整體影響：</strong>若將標準放寬至 08:15，6–9月整體準時率可從 <strong>${stdAvg}%</strong> 提升至 <strong>${newAvg}%</strong>，平均提升 <strong>+${Math.round((newAvg-stdAvg)*10)/10}%</strong>。
+        <div style="padding:12px;background:var(--bg2);border-radius:8px">
+          <table style="width:100%;border-collapse:collapse;font-size:13px">
+            <tr style="border-bottom:1px solid var(--border)">
+              <th style="padding:6px 12px;text-align:left;color:var(--text3)">標準版本</th>
+              <th style="padding:6px 12px;text-align:center">1-9月平均準時率</th>
+              <th style="padding:6px 12px;text-align:center">vs 標準</th>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border)">
+              <td style="padding:8px 12px;font-weight:600;color:var(--purple)">標準（≤8:10）</td>
+              <td style="padding:8px 12px;text-align:center;font-weight:700;color:var(--purple)">${stdAvg}%</td>
+              <td style="padding:8px 12px;text-align:center;color:var(--text3)">基準</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border)">
+              <td style="padding:8px 12px;font-weight:600;color:#3b82f6">放寬（≤8:15）</td>
+              <td style="padding:8px 12px;text-align:center;font-weight:700;color:#3b82f6">${newAvg}%</td>
+              <td style="padding:8px 12px;text-align:center;color:var(--teal);font-weight:600">+${Math.round((newAvg-stdAvg)*10)/10}%</td>
+            </tr>
+            <tr>
+              <td style="padding:8px 12px;font-weight:600;color:var(--green)">更寬（≤8:20）</td>
+              <td style="padding:8px 12px;text-align:center;font-weight:700;color:var(--green)">${new2Avg}%</td>
+              <td style="padding:8px 12px;text-align:center;color:var(--green);font-weight:600">+${Math.round((new2Avg-stdAvg)*10)/10}%</td>
+            </tr>
+          </table>
         </div>
         <div style="padding:12px;background:rgba(16,185,129,0.08);border-radius:8px;border-left:4px solid var(--green)">
-          🏆 <strong>提升最明顯：${topRoom?.room}</strong>，準時率可從 ${topRoom?.std_rate.toFixed(1)}% 提升至 ${topRoom?.new_rate.toFixed(1)}%（+${Math.round((topRoom.new_rate-topRoom.std_rate)*10)/10}%）。
+          🏆 <strong>提升最明顯（≤8:10 vs ≤8:20）：${topRoom?.room}</strong>，從 ${topRoom?.std_rate.toFixed(1)}% → ${topRoom?.new2_rate.toFixed(1)}%（+${Math.round((topRoom.new2_rate-topRoom.std_rate)*10)/10}%）。
         </div>
         <div style="padding:12px;background:rgba(245,158,11,0.08);border-radius:8px;border-left:4px solid var(--amber)">
-          ⚠️ <strong>OR06、OR07 表現仍偏低</strong>，在兩種標準下皆低於 75%，需優先改善進房效率。
+          ⚠️ <strong>OR06 在三種標準下均最低（60.0% → 66.7%）</strong>，進房效率需優先改善；<strong>OR07</strong> 也持續偏低（67.6% → 74.8%）。
         </div>
         <div style="padding:12px;background:var(--bg2);border-radius:8px;border-left:4px solid var(--border)">
-          📌 <strong>說明：</strong>標準版（7:25–8:10）= 首台進手術室在 445–490 分鐘內；寬鬆版（7:25–8:15）= 445–495 分鐘內。分母為預計開刀時間 08:00 之首台案例（扣除 OR01、OR8A、OR12、DR 房）。
+          📌 <strong>說明：</strong>分母為預計開刀時間 08:00 之案例（扣除 OR01、OR8A、OR12、DR），分子為首台進手術室在對應窗口內。資料來源：115年1–9月 XLS（共計 1,878 個有效首台場次）。
         </div>
       </div>`;
   }
